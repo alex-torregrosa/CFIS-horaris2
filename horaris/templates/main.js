@@ -100,7 +100,7 @@ function genHorario(){
     $(".btn_holder").hide();
     var txt = $('#loading_txt');
     txt.text('Conectando al servidor...');
-    ws = new WebSocket('ws://'+window.location.host+'/');
+    ws = new WebSocket('wss://'+window.location.host+'/');
 
     // Send data when websocket is opened
     ws.onopen = function() {
