@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = ')&#m!#$_df1w%kb0*)r4-k+gzx-c2g4qaei$0fv7d9vwfry%!='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = not "REDIS_URL" in os.environ
 
 ALLOWED_HOSTS = ["*"]
 
