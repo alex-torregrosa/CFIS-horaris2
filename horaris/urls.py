@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^res/js/main.js', views.mainjs, name='mainjs'),
 
     url(r'^api/facus', api.listFacus, name='facus'),
+    # L'ordre és important, son regex i pilla la primera que passa en ordre
     url(r'^api/genetseibassig', api.loadEtseibAssigs, name='etseibGenAssig'),
     url(r'^api/genetseib', api.loadCarrerasEtseib, name='etseibGen'),
     url(r'^api/listq', api.listQ, name='listq'),

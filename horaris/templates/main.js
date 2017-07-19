@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
 
+// Coses de ser un template de django, ho emple amb les url correctes
 var facusURL = "{% url 'facus' %}";
 var cuatrisURL = "{% url 'listq' %}";
 var carrerasURL = "{% url 'listcarr' %}";
