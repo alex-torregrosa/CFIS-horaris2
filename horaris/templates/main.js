@@ -10,40 +10,40 @@ var asignaturasURL = "{% url 'listassig' %}";
 var asignaturas = {};
 var assig_TOT = {};
 
-function emptyopt(){
-  return   "<option value='' disabled selected>Elige</option>";
+function emptyopt() {
+  return "<option value='' disabled selected>Elige</option>";
 }
 
-function emptyLi(){
+function emptyLi() {
   return "<li class=\"collection-item\">Aún no has añadido ninguna asignatura</li>";
 }
 
-function genLi(key,list){
+function genLi(key, list) {
   list.append(`<li class="collection-item" asID="${asignaturas[key]}"><div>${key}<a href="#!" class="secondary-content"><i class="material-icons red-text">delete</i></a></div></li>`);
-  var li = list.find("[asID='"+asignaturas[key]+"']");
-  li.find('a').click(function(){
-  var p = $(this).parent();
-  var t = p.children().remove().end().text();
-  delete asignaturas[t];
-  updateAssigList();
+  var li = list.find("[asID='" + asignaturas[key] + "']");
+  li.find('a').click(function() {
+    var p = $(this).parent();
+    var t = p.children().remove().end().text();
+    delete asignaturas[t];
+    updateAssigList();
   });
 }
 
-function updateCarreras(){
+function updateCarreras() {
   var id = $("#facultad").val();
-  updateSelect("#cuatri", cuatrisURL + "?f="+id);
-  updateSelect("#carrera", carrerasURL + "?f="+id);
+  updateSelect("#cuatri", cuatrisURL + "?f=" + id);
+  updateSelect("#carrera", carrerasURL + "?f=" + id);
 }
 
-function updateAssignatura(){
+function updateAssignatura() {
   var cuatri = $("#cuatri").val();
-  if(cuatri !== null){
+  if (cuatri !== null) {
     var carrera = $("#carrera").val();
-    if(carrera !== null){
-      $.getJSON(asignaturasURL+"?c="+carrera+"&q="+cuatri, function(data){
+    if (carrera !== null) {
+      $.getJSON(asignaturasURL + "?c=" + carrera + "&q=" + cuatri, function(data) {
         var mydict = {};
         assig_TOT = data;
-        for(var key in data){
+        for (var key in data) {
           mydict[key] = null;
         }
         $('#asignatura').autocomplete({
@@ -57,13 +57,13 @@ function updateAssignatura(){
   }
 }
 
-function updateSelect(id, url){
+function updateSelect(id, url) {
   var me = $(id);
   me.empty();
   me.append(emptyopt());
-  console.log("Updating "+id);
-  $.getJSON(url, function(data){
-    for(var key in data){
+  console.log("Updating " + id);
+  $.getJSON(url, function(data) {
+    for (var key in data) {
       me.append(`<option value="${data[key]}">${key}</option>`);
     }
     me.removeAttr("disabled");
@@ -71,21 +71,21 @@ function updateSelect(id, url){
   });
 }
 
-function updateAssigList(){
+function updateAssigList() {
   var list = $("#assigList");
   list.empty();
-  if(Object.keys(asignaturas).length === 0) list.append(emptyLi);
-  else{
-    for(var key in asignaturas){
-      genLi(key,list);
+  if (Object.keys(asignaturas).length === 0) list.append(emptyLi);
+  else {
+    for (var key in asignaturas) {
+      genLi(key, list);
     }
   }
 }
 
-function genform(){
-  var form= $('#form_assig');
+function genform() {
+  var form = $('#form_assig');
 
-  updateSelect("#facultad",facusURL);
+  updateSelect("#facultad", facusURL);
   $("#facultad").change(updateCarreras);
   $("#carrera").change(updateAssignatura);
   $("#cuatri").change(updateAssignatura);
@@ -94,15 +94,18 @@ function genform(){
 }
 
 
-function genHorario(){
-  if(Object.keys(asignaturas).length === 0) alert("Has de añadir alguna asignatura!");
-  else{
+function genHorario() {
+  if (Object.keys(asignaturas).length === 0) alert("Has de añadir alguna asignatura!");
+  else {
     $(".horloader").removeClass("hide");
     $(".btn_holder").hide();
     var txt = $('#loading_txt');
     txt.text('Conectando al servidor...');
-    ws = new WebSocket('wss://'+window.location.host+'/');
 
+    // Fix for https connections
+    if(window.location.protocol == "https:") ws = new WebSocket('wss://' + window.location.host + '/');
+    else ws = new WebSocket('ws://' + window.location.host + '/');
+    
     // Send data when websocket is opened
     ws.onopen = function() {
       txt.text('Enviando datos');
@@ -111,12 +114,12 @@ function genHorario(){
 
     ws.onmessage = function(message) {
       console.log(message.data);
-      if($(".indeterminate").length) {
+      if ($(".indeterminate").length) {
         $(".indeterminate").addClass("determinate");
         $(".indeterminate").removeClass("indeterminate");
       }
       data = JSON.parse(message.data);
-      $(".determinate").attr("style","width: "+data.progress.toString()+"%");
+      $(".determinate").attr("style", "width: " + data.progress.toString() + "%");
       txt.text(data.text);
     };
   }
@@ -144,13 +147,12 @@ $(document).ready(function() {
 
   $("#btn_gen").click(genHorario);
 
-  $("#form_assig").submit(function( event ) {
+  $("#form_assig").submit(function(event) {
     console.log("JALR");
     var name = $("#asignatura").val();
-    if(assig_TOT[name] === undefined){
+    if (assig_TOT[name] === undefined) {
       alert("La asignatura no existe");
-    }
-    else{
+    } else {
       asignaturas[name] = assig_TOT[name];
       updateAssigList();
     }
