@@ -14,7 +14,7 @@ class Carrera(models.Model):
     name = models.CharField(max_length=200)
     facultad = models.ForeignKey(
         Facultad, on_delete=models.CASCADE, default=None)
-    codigo = models.IntegerField()
+    codigo = models.CharField(max_length=32)
 
     def __str__(self):
         return self.name
