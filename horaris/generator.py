@@ -4,6 +4,7 @@ from time import sleep
 import requests
 from bs4 import BeautifulSoup
 from .loaders import etseib, fib
+import horaris.filters as filters
 
 # Aqui se hace la magia de los horarios
 
@@ -47,7 +48,7 @@ def calculaHorari(asignaturas, msg):
 
     horaris = genHoraris(groups)
     sendProgress(msg, str(len(horaris)) + " horarios posibles", 40)
-    print(horaris[0])
+    # print(horaris[0])
 
 
 def genHoraris(grups):
@@ -65,8 +66,8 @@ def genHoraris(grups):
     else:
         for grup in g:
             for h in horig:
-                hor = h + [grup]
-                horaris.append(hor)
-    del horig
-    print(len(horaris), len(grups))
+                if not filters.solapament(h,grup): #Filtre de solapaments
+                    horaris.append(h + [grup])
+    # del horig
+    print(len(horaris), len(grups), g[0])
     return horaris
