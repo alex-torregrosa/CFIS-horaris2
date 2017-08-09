@@ -110,7 +110,9 @@ def cargaAssig(assig):
                 print(grupo, b10)
 
                 if b10 in grupos:  # Podría no haber grupos...
-                    grupos[grupo]["horari"] += grupos[b10]["horari"]
+                    for el in grupos[b10]["horari"]:
+                        if el not in grupos[grupo]["horari"]:
+                            grupos[grupo]["horari"].append(el)
                 # Creamos finalmente el grupo
                 g = Grupo(name=str(grupo), assignatura=assig, subgrupo=True,
                           codigo=grupos[grupo]["id"], horario=json.dumps(grupos[grupo]["horari"]))
@@ -153,8 +155,24 @@ def getHorari(grau, quatri, grup):
             "end": end,
             "day": size
         }
-        horari.append(modul)
+        #ModuleMerger
+        added = False
+        for mod in horari:
+            if mod["day"] == modul["day"]:
+                # print(mod["start"], modul["start"], mod["start"] == modul["start"])
+                if mod["start"] == modul["start"]:
+                    added = True
+                    if modul["end"]>mod["end"]:
+                        mod["end"] = modul["end"]
 
-    # TODO: Filtrar els moduls per juntar els adjacents
+                    break
+                if mod["end"] == modul["start"]:
+                    mod["end"] = modul["end"]
+                    added = True
+                    break
+        if not added:
+            horari.append(modul)
+
+
 
     return horari

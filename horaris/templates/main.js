@@ -105,7 +105,7 @@ function genHorario() {
     // Fix for https connections
     if(window.location.protocol == "https:") ws = new WebSocket('wss://' + window.location.host + '/');
     else ws = new WebSocket('ws://' + window.location.host + '/');
-    
+
     // Send data when websocket is opened
     ws.onopen = function() {
       txt.text('Enviando datos');
@@ -119,8 +119,16 @@ function genHorario() {
         $(".indeterminate").removeClass("indeterminate");
       }
       data = JSON.parse(message.data);
-      $(".determinate").attr("style", "width: " + data.progress.toString() + "%");
-      txt.text(data.text);
+      if(!data.completed){
+        $(".determinate").attr("style", "width: " + data.progress.toString() + "%");
+        txt.text(data.text);
+      }
+      else {
+        $("#calendar").fullCalendar("removeEvents");
+        $("#calendar").fullCalendar("renderEvents",data.horari);
+        $(".calholder").show();
+        $(".horloader").hide();
+      }
     };
   }
 }
@@ -128,20 +136,20 @@ function genHorario() {
 
 $(document).ready(function() {
   // $('select').material_select();
-  // $('#calendar').fullCalendar({
-  //   editable: false,
-  //   handleWindowResize: true,
-  //   weekends: false, // Hide weekends
-  //   defaultView: 'agendaWeek', // Only show week view
-  //   header: false, // Hide buttons/titles
-  //   minTime: '07:30:00', // Start time for the calendar
-  //   maxTime: '22:00:00', // End time for the calendar
-  //   columnFormat: {
-  //       week: 'ddd' // Only show day of the week names
-  //   },
-  //   displayEventTime: true,
-  //   allDayText: 'Online/TBD'
-  // });
+  $('#calendar').fullCalendar({
+    editable: false,
+    handleWindowResize: true,
+    weekends: false, // Hide weekends
+    defaultView: 'agendaWeek', // Only show week view
+    header: false, // Hide buttons/titles
+    allDaySlot: false,
+    minTime: '08:00:00', // Start time for the calendar
+    maxTime: '21:00:00', // End time for the calendar
+    columnFormat: 'dddd',
+    displayEventTime: true,
+    height: 'auto'
+  });
+  $(".calholder").hide();
   genform();
   updateAssigList();
 
@@ -150,6 +158,8 @@ $(document).ready(function() {
   $("#form_assig").submit(function(event) {
     console.log("JALR");
     var name = $("#asignatura").val();
+    $("#asignatura").val("");
+    $("#asignatura").next().removeClass("active");
     if (assig_TOT[name] === undefined) {
       alert("La asignatura no existe");
     } else {
