@@ -1,4 +1,4 @@
-from .models import  Grupo
+from .models import Grupo
 import json
 
 # Horari: array de grups
@@ -6,6 +6,8 @@ import json
 # grup.horario: array de classes
 # classe: dict amb start, end i day
 #
+
+
 def solapament(horari, grup):
     # Indica si a un horari hi ha solapaments
     hor = json.loads(grup.horario)
@@ -16,6 +18,7 @@ def solapament(horari, grup):
                 if solapen(classe1, classe2):
                     return True
     return False
+
 
 def solapen(c1, c2):
     # Indica si dues classes es solapen
@@ -32,7 +35,7 @@ def solapen(c1, c2):
             return True
         else:
             return False
-    else: # c1start < c2start
+    else:  # c1start < c2start
         if c2["start"] < c1["end"]:
             return True
         else:

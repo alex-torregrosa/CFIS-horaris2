@@ -1,9 +1,11 @@
-import json, requests, time
+import json
+import requests
+import time
 from .models import Asignatura, Grupo
 from bs4 import BeautifulSoup
 from .loaders import etseib, fib
 import horaris.filters as filters
-
+from .sorter import Sorter
 # Aqui se hace la magia de los horarios
 
 
@@ -16,7 +18,8 @@ def sendProgress(msg, text, progress):
             "completed": False
         })
     }
-    time.sleep(0.05) # Sino triga massa poc i s'omple la cua al treballar amb moltes assignatures
+    # Sino triga massa poc i s'omple la cua al treballar amb moltes assignatures
+    time.sleep(0.05)
     msg.reply_channel.send(res, immediately=True)
 
 
@@ -46,12 +49,23 @@ def calculaHorari(asignaturas, msg):
     # Generem els horaris
     horaris = genHoraris(groups)
 
-    sendProgress(msg, str(len(horaris)) + " horarios posibles", 40)
-    if len(horaris)> 0:
-        exphor = exporta(horaris[0])
+    sendProgress(msg, str(len(horaris)) +
+                 " horarios posibles, ordenando...", 40)
+
+    s = Sorter()
+    s.set_fi_p(10)
+
+    horaris.sort(key=s.puntua, reverse=True)
+
+    sendProgress(msg, "Descargando...", 90)
+    if len(horaris) > 0:
+        exphor = []
+        # Només exportem els 100 primers horaris
+        for x in range(0, min(100, len(horaris))):
+            exphor.append(exporta(horaris[x]))
         res = {
             "text": json.dumps({
-                "horari": exphor,
+                "horaris": exphor,
                 "completed": True
             })
         }
@@ -75,29 +89,31 @@ def genHoraris(grups):
     else:
         for grup in g:
             for h in horig:
-                if not filters.solapament(h,grup): #Filtre de solapaments
+                if not filters.solapament(h, grup):  # Filtre de solapaments
                     horaris.append(h + [grup])
     # del horig
     print(len(horaris), len(grups), g[0])
     return horaris
 
+
 def exporta(horari):
     res = []
     baset = time.time()
-    baset -= time.localtime(baset).tm_wday*3600*24
-    colors = ["#d50000","#304ffe","#00c853","#ffd600","#aa00ff","#0091ea","#ff6d00","#263238","#ff6d00","10","11","12"]
+    baset -= time.localtime(baset).tm_wday * 3600 * 24
+    colors = ["#d50000", "#304ffe", "#00c853", "#ffd600", "#aa00ff",
+              "#0091ea", "#ff6d00", "#263238", "#ff6d00", "10", "11", "12"]
     act = 0
     for g in horari:
         h = json.loads(g.horario)
         n = g.assignatura.name
         ng = g.name
         for c in h:
-            mt = time.localtime(baset + (c["day"]-1)*24*3600)
-            st=time.strftime("%Y-%m-%dT",mt)
+            mt = time.localtime(baset + (c["day"] - 1) * 24 * 3600)
+            st = time.strftime("%Y-%m-%dT", mt)
             ev = {}
             ev["title"] = n + " (" + ng + ")"
-            ev["start"] = st+c["start"]
-            ev["end"] = st+c["end"]
+            ev["start"] = st + c["start"]
+            ev["end"] = st + c["end"]
             ev["color"] = colors[act]
             res.append(ev)
         act += 1

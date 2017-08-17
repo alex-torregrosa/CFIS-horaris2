@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse, JsonResponse
 from .models import Carrera, Facultad, Quatri, Asignatura
+import collections
 
 
 def listFacus(request):
@@ -11,7 +12,8 @@ def listFacus(request):
     v = {}
     for el in facus:
         v[str(el)]=el.id;
-    return JsonResponse(v)
+    # L'OrderedDict fa que apareguin en ordre alfabetic
+    return JsonResponse(collections.OrderedDict(sorted(v.items())))
 
 def listQ(request):
     # Llista en json dels quatris
@@ -21,7 +23,7 @@ def listQ(request):
     v = {}
     for el in cuatris:
         v[str(el)]=el.id;
-    return JsonResponse(v)
+    return JsonResponse(collections.OrderedDict(sorted(v.items())))
 
 def listCarreras(request):
     # Llista en json de les carreres
@@ -31,7 +33,7 @@ def listCarreras(request):
     v = {}
     for el in carreras:
         v[str(el)]=el.id;
-    return JsonResponse(v)
+    return JsonResponse(collections.OrderedDict(sorted(v.items())))
 
 
 def listAsigs(request):

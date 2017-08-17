@@ -9,6 +9,8 @@ var asignaturasURL = "{% url 'listassig' %}";
 
 var asignaturas = {};
 var assig_TOT = {};
+var actual = 0;
+var horarios = [];
 
 function emptyopt() {
   return "<option value='' disabled selected>Elige</option>";
@@ -93,17 +95,26 @@ function genform() {
   $("select").material_select();
 }
 
+function renderCal() {
+  $("#calendar").fullCalendar("removeEvents");
+  $("#calendar").fullCalendar("renderEvents", horarios[actual]);
+  $(".calholder").show();
+  var n = actual + 1;
+  $("#cal_txt").text(n.toString() + "/" + horarios.length.toString());
+}
 
 function genHorario() {
   if (Object.keys(asignaturas).length === 0) alert("Has de añadir alguna asignatura!");
   else {
     $(".horloader").removeClass("hide");
+    $(".horloader").show();
     $(".btn_holder").hide();
+    $(".calholder").hide();
     var txt = $('#loading_txt');
     txt.text('Conectando al servidor...');
 
     // Fix for https connections
-    if(window.location.protocol == "https:") ws = new WebSocket('wss://' + window.location.host + '/');
+    if (window.location.protocol == "https:") ws = new WebSocket('wss://' + window.location.host + '/');
     else ws = new WebSocket('ws://' + window.location.host + '/');
 
     // Send data when websocket is opened
@@ -119,14 +130,13 @@ function genHorario() {
         $(".indeterminate").removeClass("indeterminate");
       }
       data = JSON.parse(message.data);
-      if(!data.completed){
+      if (!data.completed) {
         $(".determinate").attr("style", "width: " + data.progress.toString() + "%");
         txt.text(data.text);
-      }
-      else {
-        $("#calendar").fullCalendar("removeEvents");
-        $("#calendar").fullCalendar("renderEvents",data.horari);
-        $(".calholder").show();
+      } else {
+        horarios = data.horaris;
+        renderCal();
+        $("#bt_prev").hide();
         $(".horloader").hide();
       }
     };
@@ -154,6 +164,29 @@ $(document).ready(function() {
   updateAssigList();
 
   $("#btn_gen").click(genHorario);
+  $("#bt_update").click(genHorario);
+
+  $("#bt_next").click(function(event) {
+    if (actual + 1 < horarios.length) {
+      actual++;
+      $("#bt_prev").show();
+      if (actual + 1 == horarios.length) {
+        $("#bt_next").hide();
+      }
+      renderCal();
+    }
+  });
+  $("#bt_prev").click(function(event) {
+    if (actual > 0) {
+      actual--;
+      $("#bt_next").show();
+      if (actual == 0) {
+        $("#bt_prev").hide();
+      }
+      renderCal();
+    }
+  });
+
 
   $("#form_assig").submit(function(event) {
     console.log("JALR");
