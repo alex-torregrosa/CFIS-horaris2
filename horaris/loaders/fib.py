@@ -136,7 +136,26 @@ def cargaAssig(assig):
             g = Grupo(name=str(grupo), assignatura=assig, subgrupo=False,
                       codigo=str(grupo), horario=json.dumps(grups[grupo]))
             g.save()
-            
+    
+    # Join de grups
+    myGroups = Grupo.objects.filter(assignatura=assig)
+    for dbGroup in myGroups:
+        
+        others = Grupo.objects.filter(assignatura=assig).exclude(pk=dbGroup.pk)
+        found = False
+        for ng in others:
+            if ng.horario == dbGroup.horario:
+                found = True
+                #print("match!", dbGroup.name, ng.name)
+                break
+        if found:
+            ng.name = ng.name + "/" + dbGroup.name
+            #print("newName", ng.name)
+            ng.codigo = ng.name
+            ng.save()
+            dbGroup.delete()
+        
+ 
     # Guardamos la asignatura
     assig.loaded = True
     assig.save()

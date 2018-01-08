@@ -113,6 +113,7 @@ def cargaAssig(assig):
                     for el in grupos[b10]["horari"]:
                         if el not in grupos[grupo]["horari"]:
                             grupos[grupo]["horari"].append(el)
+
                 # Creamos finalmente el grupo
                 g = Grupo(name=str(grupo), assignatura=assig, subgrupo=True,
                           codigo=grupos[grupo]["id"], horario=json.dumps(grupos[grupo]["horari"]))
@@ -125,6 +126,30 @@ def cargaAssig(assig):
             g = Grupo(name=str(grupo), assignatura=assig, subgrupo=False,
                       codigo=grupos[grupo]["id"], horario=json.dumps(grupos[grupo]["horari"]))
             g.save()
+    
+    # Join de grups
+    myGroups = Grupo.objects.filter(assignatura=assig)
+    for dbGroup in myGroups:
+        
+        others = Grupo.objects.filter(assignatura=assig).exclude(pk=dbGroup.pk)
+        found = False
+        h2 = set()
+        for el in json.loads(dbGroup.horario):
+            h2.add(json.dumps(el))
+        for ng in others:
+            h1 = set()
+            for el in json.loads(ng.horario):
+                h1.add(json.dumps(el))
+            if h1 == h2:
+                found= True
+                break
+
+        if found:
+            ng.name = ng.name + "/" + dbGroup.name
+            #print("newName", ng.name)
+            ng.codigo = ng.name
+            ng.save()
+            dbGroup.delete()
     # Guardamos la asignatura
     assig.loaded = True
     assig.save()
