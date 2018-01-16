@@ -24,7 +24,7 @@ SECRET_KEY = ')&#m!#$_df1w%kb0*)r4-k+gzx-c2g4qaei$0fv7d9vwfry%!='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not "REDIS_URL" in os.environ
-DEBUG = True
+
 ALLOWED_HOSTS = ["*"]
 
 
