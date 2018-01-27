@@ -3,7 +3,7 @@ import requests
 import time
 from .models import Asignatura, Grupo
 from bs4 import BeautifulSoup
-from .loaders import etseib, fib
+from .loaders import etseib, fib, etsetb
 import horaris.filters as filters
 from .sorter import Sorter
 # Aqui se hace la magia de los horarios
@@ -40,6 +40,8 @@ def calculaHorari(asignaturas, msg):
                 etseib.cargaAssig(assigs[x])
             elif assigs[x].carrera.facultad.name == "fib":
                 fib.cargaAssig(assigs[x])
+            elif assigs[x].carrera.facultad.name == "etsetb":
+                etsetb.cargaAssig(assigs[x])
 
     sendProgress(msg, "Generant horaris...", 30)
     # Ara toca obtenir tots els grups
@@ -92,7 +94,7 @@ def genHoraris(grups):
                 if not filters.solapament(h, grup):  # Filtre de solapaments
                     horaris.append(h + [grup])
     # del horig
-    print(len(horaris), len(grups), g[0])
+    print(len(horaris), len(grups), g[0]) #peta si la query no retorna res (g[0] = QuerySet [])
     return horaris
 
 
