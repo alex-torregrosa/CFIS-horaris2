@@ -157,7 +157,8 @@ $(document).ready(function() {
     maxTime: '21:00:00', // End time for the calendar
     columnFormat: 'dddd',
     displayEventTime: true,
-    height: 'auto'
+    height: 'auto',
+    firstDay: 1
   });
   $(".calholder").hide();
   genform();
