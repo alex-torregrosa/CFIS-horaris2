@@ -104,7 +104,7 @@ function renderCal() {
 }
 
 function genHorario() {
-  if (Object.keys(asignaturas).length === 0) alert("Has de añadir alguna asignatura!");
+  if (Object.keys(asignaturas).length === 0) alert("Has d'afegir' alguna assignatura!");
   else {
     $(".horloader").removeClass("hide");
     $(".horloader").show();
@@ -133,6 +133,7 @@ function genHorario() {
       if (!data.completed) {
         $(".determinate").attr("style", "width: " + data.progress.toString() + "%");
         txt.text(data.text);
+        if (data.progress == 100) $(".btn_holder").show();
       } else {
         horarios = data.horaris;
         renderCal();
@@ -198,7 +199,7 @@ $(document).ready(function () {
     $("#asignatura").val("");
     $("#asignatura").next().removeClass("active");
     if (assig_TOT[name] === undefined) {
-      alert("La asignatura no existe");
+      alert("L'assignatura no existeix");
     } else {
       asignaturas[name] = assig_TOT[name];
       updateAssigList();
