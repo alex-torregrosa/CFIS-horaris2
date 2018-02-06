@@ -13,11 +13,11 @@ var actual = 0;
 var horarios = [];
 
 function emptyopt() {
-  return "<option value='' disabled selected>Elige</option>";
+  return "<option value='' disabled selected>Tria</option>";
 }
 
 function emptyLi() {
-  return "<li class=\"collection-item\">Aún no has añadido ninguna asignatura</li>";
+  return "<li class=\"collection-item\">Encara no has afegit cap assignatura</li>";
 }
 
 function genLi(key, list) {

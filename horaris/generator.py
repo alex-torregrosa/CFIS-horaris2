@@ -29,10 +29,10 @@ def calculaHorari(asignaturas, msg):
     # Fetch classes
     for el in asignaturas:
         assigs.append(Asignatura.objects.get(pk=asignaturas[el]))
-    sendProgress(msg, "Asignaturas cargadas", 10)
+    sendProgress(msg, "Asignaturas carregades", 10)
     total = len(assigs)
     for x in range(0, total):
-        sendProgress(msg, "Cargando horarios para " +
+        sendProgress(msg, "Cargando horaris per a " +
                      assigs[x].name, 10 + (x / total) * 20)
         if not assigs[x].loaded:
             print("Carregant horari de",  assigs[x].name)
@@ -52,14 +52,14 @@ def calculaHorari(asignaturas, msg):
     horaris = genHoraris(groups)
 
     sendProgress(msg, str(len(horaris)) +
-                 " horarios posibles, ordenando...", 40)
+                 " horaris possibles, ordenant...", 40)
 
     s = Sorter()
     s.set_fi_p(10)
 
     horaris.sort(key=s.puntua, reverse=True)
 
-    sendProgress(msg, "Descargando...", 90)
+    sendProgress(msg, "Descarregant...", 90)
     if len(horaris) > 0:
         exphor = []
         # Només exportem els 100 primers horaris
@@ -73,7 +73,7 @@ def calculaHorari(asignaturas, msg):
         }
         msg.reply_channel.send(res, immediately=True)
     else:
-        sendProgress(msg, "Ningún horario encontrado", 100)
+        sendProgress(msg, "Ningun horari trobat", 100)
 
 
 def genHoraris(grups):
