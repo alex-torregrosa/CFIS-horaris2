@@ -10,7 +10,7 @@ var asignaturasURL = "{% url 'listassig' %}";
 var asignaturas = {};
 var assig_TOT = {};
 var actual = 0;
-var horarios = [];
+var horarios = [[]];
 
 function emptyopt() {
   return "<option value='' disabled selected>Tria</option>";
@@ -96,20 +96,22 @@ function genform() {
 }
 
 function renderCal() {
+
   $("#calendar").fullCalendar("removeEvents");
   $("#calendar").fullCalendar("renderEvents", horarios[actual]);
-  $(".calholder").show();
+  //$(".calholder").show();
   var n = actual + 1;
   $("#cal_txt").text(n.toString() + "/" + horarios.length.toString());
+
 }
 
 function genHorario() {
-  if (Object.keys(asignaturas).length === 0) alert("Has d'afegir' alguna assignatura!");
+  if (Object.keys(asignaturas).length === 0) alert("Has d'afegir alguna assignatura!");
   else {
     $(".horloader").removeClass("hide");
     $(".horloader").show();
     $(".btn_holder").hide();
-    $(".calholder").hide();
+    //$(".calholder").hide();
     var txt = $('#loading_txt');
     txt.text('Conectando al servidor...');
 
@@ -136,9 +138,13 @@ function genHorario() {
         if (data.progress == 100) $(".btn_holder").show();
       } else {
         horarios = data.horaris;
-        renderCal();
+        actual = 0;
+        $("#bt_next").show();
         $("#bt_prev").hide();
+        $("#modal-horaris").modal("open");
+        //$("#bt_prev").hide();
         $(".horloader").hide();
+        $(".btn_holder").show();
       }
     };
   }
@@ -161,12 +167,19 @@ $(document).ready(function () {
     height: 'auto',
     firstDay: 1
   });
-  $(".calholder").hide();
+  //$(".calholder").hide();
   genform();
   updateAssigList();
 
   //init modals
   $('.modal').modal();
+  $('#modal-horaris').modal({
+    ready: function (modal, trigger) {
+      renderCal(); // La primera no la fa be i cal fer una segona passada
+      renderCal();
+    }
+  })
+
 
   $("#btn_gen").click(genHorario);
   $("#bt_update").click(genHorario);

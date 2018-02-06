@@ -15,16 +15,16 @@
 </head>
 
 <body>
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script> -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" media="screen"
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.min.css" media="screen"
     title="no title">
   <!-- <link rel="stylesheet" href="https://raw.githubusercontent.com/jackyliang/Material-Design-For-Full-Calendar/master/_materialFullCalendar.scss" media="screen" title="no title"> -->
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.min.js"></script>
 
   <div class="navbar-fixed">
     <nav>
@@ -125,34 +125,7 @@
                 </div>
               </div>
             </div>
-            <div class="row calholder">
-              <div class="row calcontrols">
 
-                <div class="col s12">
-                  <div class="refreshholder left">
-                    <a id="bt_update" class="waves-effect waves-light btn blue darken-1 ">
-                      <i class="material-icons">cached</i>
-                    </a>
-                  </div>
-                  <span id="cal_txt">0/0</span>
-                  <div class="nav_btn_holder right">
-
-                    <a id="bt_prev" class="waves-effect waves-light btn blue darken-1 ">
-                      <i class="material-icons">chevron_left</i>
-                    </a>
-                    <a id="bt_next" class="waves-effect waves-light btn blue darken-1 ">
-                      <i class="material-icons">chevron_right</i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div class="row cal">
-                <div class="col s12 center">
-                  <div id="calendar"></div>
-                </div>
-              </div>
-
-            </div>
           </div>
         </div>
       </div>
@@ -165,6 +138,44 @@
     <div class="modal-content">
       <h4>Ajuda</h4>
       <p>No, així no aprovaras fonaments, ho sento.</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Tancar</a>
+    </div>
+  </div>
+
+  <!-- Modal Horaris -->
+  <div id="modal-horaris" class="modal">
+    <div class="modal-content">
+      <h4>Horari</h4>
+      <div class=" calholder">
+        <div class="row calcontrols">
+
+          <div class="col s12">
+            <div class="refreshholder left">
+              <a id="bt_update" class="waves-effect waves-light btn blue darken-1 ">
+                <i class="material-icons">cached</i>
+              </a>
+            </div>
+            <span id="cal_txt">0/0</span>
+            <div class="nav_btn_holder right">
+
+              <a id="bt_prev" class="waves-effect waves-light btn blue darken-1 ">
+                <i class="material-icons">chevron_left</i>
+              </a>
+              <a id="bt_next" class="waves-effect waves-light btn blue darken-1 ">
+                <i class="material-icons">chevron_right</i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row cal">
+
+          <div id="calendar"></div>
+
+        </div>
+
+      </div>
     </div>
     <div class="modal-footer">
       <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Tancar</a>
