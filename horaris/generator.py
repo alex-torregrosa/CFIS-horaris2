@@ -94,7 +94,7 @@ def genHoraris(grups):
                 if not filters.solapament(h, grup):  # Filtre de solapaments
                     horaris.append(h + [grup])
     # del horig
-    print(len(horaris), len(grups), g[0]) #peta si la query no retorna res (g[0] = QuerySet [])
+    # print(len(horaris), len(grups), g[0]) #peta si la query no retorna res (g[0] = QuerySet [])
     return horaris
 
 

@@ -1,152 +1,178 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>CFIS-horaris</title>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<head>
+  <meta charset="utf-8">
+  <title>CFIS-horaris</title>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 
-  </head>
-  <body>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" media="screen" title="no title">
-    <!-- <link rel="stylesheet" href="https://raw.githubusercontent.com/jackyliang/Material-Design-For-Full-Calendar/master/_materialFullCalendar.scss" media="screen" title="no title"> -->
+</head>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+<body>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" media="screen"
+    title="no title">
+  <!-- <link rel="stylesheet" href="https://raw.githubusercontent.com/jackyliang/Material-Design-For-Full-Calendar/master/_materialFullCalendar.scss" media="screen" title="no title"> -->
 
-    <div class="navbar-fixed">
-      <nav>
-        <div class="nav-wrapper blue darken-2">
-          <div class="row">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper blue darken-2">
+        <div class="row">
           <div class="col s12">
             <a href="#" class="brand-logo">CFIS-horaris</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-              <li><a href="https://media.giphy.com/media/fbBDhlw5pPAYg/giphy.gif">Enllaç?</a></li>
+              <li>
+                <a onclick="$('#modalajuda').modal('open')">Ajuda</a>
+              </li>
+              <li>
+                <a href="https://media.giphy.com/media/fbBDhlw5pPAYg/giphy.gif">Avís legal</a>
+              </li>
             </ul>
           </div>
         </div>
-        </div>
-      </nav>
-    </div>
+      </div>
+    </nav>
+  </div>
 
-    <div class="container">
-      <!-- Your content goes here -->
+  <div class="container">
+    <!-- Your content goes here -->
 
-      <div class="row">
-        <div class="col s12 l6">
-          <div class="row">
-            <div class="col s12">
-              <div class="card white">
-                <div class="card-content">
-                  <span class="card-title">Añadir asignaturas</span>
-                  <form id="form_assig">
-                    <div class="row">
-                      <div class="input-field col s12 m6">
-                        <select id="facultad" disabled>
-                        </select>
-                        <label>Facultad</label>
-                      </div>
-                      <div class="input-field col s12 m6">
-                        <select id="cuatri" disabled>
-                        </select>
-                        <label>Cuatrimestre</label>
-                      </div>
+    <div class="row">
+      <div class="col s12 l6">
+        <div class="row">
+          <div class="col s12">
+            <div class="card white">
+              <div class="card-content">
+                <span class="card-title">Añadir asignaturas</span>
+                <form id="form_assig">
+                  <div class="row">
+                    <div class="input-field col s12 m6">
+                      <select id="facultad" disabled>
+                      </select>
+                      <label>Facultad</label>
                     </div>
-                    <div class="row">
-                      <div class="input-field col s12">
-                        <select id="carrera" disabled>
-                        </select>
-                        <label>Carrera</label>
-                      </div>
+                    <div class="input-field col s12 m6">
+                      <select id="cuatri" disabled>
+                      </select>
+                      <label>Cuatrimestre</label>
                     </div>
-                    <div class="row">
-                      <div class="input-field col s12 m8">
-                        <input type="text" id="asignatura" class="autocomplete" disabled>
-                        <label for="autocomplete-input">Asignatura</label>
-                      </div>
-                      <div class="col s12 m4">
-                        <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action">Añadir
-                          <i class="material-icons right">add</i>
-                        </button>
-                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <select id="carrera" disabled>
+                      </select>
+                      <label>Carrera</label>
                     </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col s12">
-              <div class="card white">
-                <div class="card-content">
-                  <span class="card-title">Asignaturas</span>
-                  <ul class="collection" id="assigList">
-
-                  </ul>
-                </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12 m8">
+                      <input type="text" id="asignatura" class="autocomplete" disabled>
+                      <label for="autocomplete-input">Asignatura</label>
+                    </div>
+                    <div class="col s12 m4">
+                      <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action">Añadir
+                        <i class="material-icons right">add</i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
-        <div class="col s12 l6">
-          <div class="card white">
-            <div class="card-content">
-              <span class="card-title">Horario</span>
-              <div class="row btn_holder">
-                <div class="col s12 center">
-                  <a class="waves-effect waves-light btn blue darken-1" id="btn_gen">Generar</a>
-                </div>
-              </div>
-              <div class="row horloader hide">
-                <div class="col s12">
-                  <div class="progress">
-                    <div class="indeterminate blue"></div>
-                </div>
-                <div class="col s12 center">
-                  <span id="loading_txt">Calculando horario...</span>
-                </div>
-                </div>
-              </div>
-              <div class="row calholder">
-                <div class="row calcontrols">
 
-                  <div class="col s12">
-                    <div class="refreshholder left">
-                      <a id="bt_update" class="waves-effect waves-light btn blue darken-1 "><i class="material-icons">cached</i></a>  
-                    </div>
-                    <span id="cal_txt">0/0</span>
-                    <div class="nav_btn_holder right">
+        <div class="row">
+          <div class="col s12">
+            <div class="card white">
+              <div class="card-content">
+                <span class="card-title">Asignaturas</span>
+                <ul class="collection" id="assigList">
 
-                      <a id="bt_prev" class="waves-effect waves-light btn blue darken-1 "><i class="material-icons">chevron_left</i></a>
-                      <a id="bt_next" class="waves-effect waves-light btn blue darken-1 "><i class="material-icons">chevron_right</i></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="row cal">
-                  <div class="col s12 center">
-                    <div id="calendar"></div>
-                  </div>
-                </div>
-
+                </ul>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="col s12 l6">
+        <div class="card white">
+          <div class="card-content">
+            <span class="card-title">Horario</span>
+            <div class="row btn_holder">
+              <div class="col s12 center">
+                <a class="waves-effect waves-light btn blue darken-1" id="btn_gen">Generar</a>
+              </div>
+            </div>
+            <div class="row horloader hide">
+              <div class="col s12">
+                <div class="progress">
+                  <div class="indeterminate blue"></div>
+                </div>
+                <div class="col s12 center">
+                  <span id="loading_txt">Calculando horario...</span>
+                </div>
+              </div>
+            </div>
+            <div class="row calholder">
+              <div class="row calcontrols">
 
+                <div class="col s12">
+                  <div class="refreshholder left">
+                    <a id="bt_update" class="waves-effect waves-light btn blue darken-1 ">
+                      <i class="material-icons">cached</i>
+                    </a>
+                  </div>
+                  <span id="cal_txt">0/0</span>
+                  <div class="nav_btn_holder right">
+
+                    <a id="bt_prev" class="waves-effect waves-light btn blue darken-1 ">
+                      <i class="material-icons">chevron_left</i>
+                    </a>
+                    <a id="bt_next" class="waves-effect waves-light btn blue darken-1 ">
+                      <i class="material-icons">chevron_right</i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="row cal">
+                <div class="col s12 center">
+                  <div id="calendar"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <script src ="{% url 'mainjs' %}"></script>
+  </div>
 
-  </body>
+  <!-- Modal Ajuda -->
+  <div id="modalajuda" class="modal">
+    <div class="modal-content">
+      <h4>Ajuda</h4>
+      <p>No, així no aprovaras fonaments, ho sento.</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Tancar</a>
+    </div>
+  </div>
+
+  <script src="{% url 'mainjs' %}"></script>
+
+</body>
+
 </html>

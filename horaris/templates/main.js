@@ -23,7 +23,7 @@ function emptyLi() {
 function genLi(key, list) {
   list.append(`<li class="collection-item" asID="${asignaturas[key]}"><div>${key}<a href="#!" class="secondary-content"><i class="material-icons red-text">delete</i></a></div></li>`);
   var li = list.find("[asID='" + asignaturas[key] + "']");
-  li.find('a').click(function() {
+  li.find('a').click(function () {
     var p = $(this).parent();
     var t = p.children().remove().end().text();
     delete asignaturas[t];
@@ -42,7 +42,7 @@ function updateAssignatura() {
   if (cuatri !== null) {
     var carrera = $("#carrera").val();
     if (carrera !== null) {
-      $.getJSON(asignaturasURL + "?c=" + carrera + "&q=" + cuatri, function(data) {
+      $.getJSON(asignaturasURL + "?c=" + carrera + "&q=" + cuatri, function (data) {
         var mydict = {};
         assig_TOT = data;
         for (var key in data) {
@@ -64,7 +64,7 @@ function updateSelect(id, url) {
   me.empty();
   me.append(emptyopt());
   console.log("Updating " + id);
-  $.getJSON(url, function(data) {
+  $.getJSON(url, function (data) {
     for (var key in data) {
       me.append(`<option value="${data[key]}">${key}</option>`);
     }
@@ -118,12 +118,12 @@ function genHorario() {
     else ws = new WebSocket('ws://' + window.location.host + '/');
 
     // Send data when websocket is opened
-    ws.onopen = function() {
+    ws.onopen = function () {
       txt.text('Enviando datos');
       ws.send(JSON.stringify(asignaturas));
     };
 
-    ws.onmessage = function(message) {
+    ws.onmessage = function (message) {
       console.log(message.data);
       if ($(".indeterminate").length) {
         $(".indeterminate").addClass("determinate");
@@ -144,7 +144,7 @@ function genHorario() {
 }
 
 
-$(document).ready(function() {
+$(document).ready(function () {
   // $('select').material_select();
   $('#calendar').fullCalendar({
     editable: false,
@@ -164,10 +164,13 @@ $(document).ready(function() {
   genform();
   updateAssigList();
 
+  //init modals
+  $('.modal').modal();
+
   $("#btn_gen").click(genHorario);
   $("#bt_update").click(genHorario);
 
-  $("#bt_next").click(function(event) {
+  $("#bt_next").click(function (event) {
     if (actual + 1 < horarios.length) {
       actual++;
       $("#bt_prev").show();
@@ -177,7 +180,7 @@ $(document).ready(function() {
       renderCal();
     }
   });
-  $("#bt_prev").click(function(event) {
+  $("#bt_prev").click(function (event) {
     if (actual > 0) {
       actual--;
       $("#bt_next").show();
@@ -189,7 +192,7 @@ $(document).ready(function() {
   });
 
 
-  $("#form_assig").submit(function(event) {
+  $("#form_assig").submit(function (event) {
     console.log("JALR");
     var name = $("#asignatura").val();
     $("#asignatura").val("");
