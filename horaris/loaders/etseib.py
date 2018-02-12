@@ -135,8 +135,10 @@ def cargaAssig(assig):
                       codigo=grupos[grupo]["id"], horario=json.dumps(grupos[grupo]["horari"]))
             g.save()
 
+    print("Joining groups")
     # Join de grups
     myGroups = Grupo.objects.filter(assignatura=assig)
+    modified = {}
     for dbGroup in myGroups:
 
         others = Grupo.objects.filter(assignatura=assig).exclude(pk=dbGroup.pk)
@@ -153,11 +155,16 @@ def cargaAssig(assig):
                 break
 
         if found:
+            # print("merge", ng.name, dbGroup.name)
+            if dbGroup.name in modified:
+                dbGroup.name = modified[dbGroup.name]
+            modified[ng.name] = ng.name + "/" + dbGroup.name
             ng.name = ng.name + "/" + dbGroup.name
-            #print("newName", ng.name)
+
             ng.codigo = ng.name
             ng.save()
             dbGroup.delete()
+
     # Guardamos la asignatura
     assig.loaded = True
     assig.save()
