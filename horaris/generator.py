@@ -23,12 +23,12 @@ def sendProgress(msg, text, progress):
     msg.reply_channel.send(res, immediately=True)
 
 
-def calculaHorari(asignaturas, msg):
+def calculaHorari(data, msg):
     # Funció PRINCIPAL del websocket
     assigs = []
     # Fetch classes
-    for el in asignaturas:
-        assigs.append(Asignatura.objects.get(pk=asignaturas[el]))
+    for el in data["assignatures"]:
+        assigs.append(Asignatura.objects.get(pk=data["assignatures"][el]))
     sendProgress(msg, "Asignatures carregades", 10)
     total = len(assigs)
     for x in range(0, total):
@@ -49,7 +49,7 @@ def calculaHorari(asignaturas, msg):
     for i in range(0, total):
         groups.append(Grupo.objects.filter(assignatura=assigs[i]))
     # Generem els horaris
-    horaris = genHoraris(groups)
+    horaris = genHoraris(groups, data["filters"])
 
     sendProgress(msg, str(len(horaris)) +
                  " horaris possibles, ordenant...", 40)
@@ -76,13 +76,13 @@ def calculaHorari(asignaturas, msg):
         sendProgress(msg, "Cap horari trobat", 100)
 
 
-def genHoraris(grups):
+def genHoraris(grups, filtres):
     # Genera els horaris a partir de grups (recursivament)
     if len(grups) == 0:
         return []
     g = grups[0]
     # Generem els horaris de tots els grups menys el primer
-    horig = genHoraris(grups[1:])
+    horig = genHoraris(grups[1:], filtres)
     horaris = []
     if horig == []:
         for grup in g:

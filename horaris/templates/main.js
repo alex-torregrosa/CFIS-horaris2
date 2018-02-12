@@ -107,6 +107,8 @@ function renderCal() {
 
 function genHorario() {
   if (Object.keys(asignaturas).length === 0) alert("Has d'afegir alguna assignatura!");
+  else if ($("#hora_inici").prop('checked') && $("#time_start").val() != "") alert("Hora d'inici incorrecta");
+  else if ($("#hora_fi").prop('checked') && $("#time_end").val() != "") alert("Hora de finalització incorrecta");
   else {
     $(".horloader").removeClass("hide");
     $(".horloader").show();
@@ -115,6 +117,20 @@ function genHorario() {
     var txt = $('#loading_txt');
     txt.text('Conectando al servidor...');
 
+    //Llista de filtres amb estat
+    filterList = {};
+    filterList["solapaments"] = $("#solapaments").prop('checked');
+    filterList["dinar"] = $("#puc_dinar").prop('checked');
+    filterList["inici"] = $("#hora_inici").prop('checked');
+    filterList["fi"] = $("#hora_inici").prop('checked');
+
+    fData = {};
+    fData["inici"] = $("#time_start").val();
+    fData["fi"] = $("#time_end").val();
+
+    filters = { "list": filterList, "data": fData };
+
+
     // Fix for https connections
     if (window.location.protocol == "https:") ws = new WebSocket('wss://' + window.location.host + '/');
     else ws = new WebSocket('ws://' + window.location.host + '/');
@@ -122,7 +138,7 @@ function genHorario() {
     // Send data when websocket is opened
     ws.onopen = function () {
       txt.text('Enviando datos');
-      ws.send(JSON.stringify(asignaturas));
+      ws.send(JSON.stringify({ "assignatures": asignaturas, "filters": filters }));
     };
 
     ws.onmessage = function (message) {
@@ -180,9 +196,18 @@ $(document).ready(function () {
     }
   })
 
+  //Init Collapsibles
+  $('.collapsible').collapsible();
+  //Init date pickers
+  $('.timepicker').pickatime({
+    twelvehour: false, // Use AM/PM or 24-hour format
+    donetext: 'OK', // text for done-button
+    cleartext: 'Esborrar', // text for clear-button
+    canceltext: 'Sortir', // Text for cancel-button
+  });
 
   $("#btn_gen").click(genHorario);
-  $("#bt_update").click(genHorario);
+
 
   $("#bt_next").click(function (event) {
     if (actual + 1 < horarios.length) {

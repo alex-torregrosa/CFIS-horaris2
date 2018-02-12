@@ -37,7 +37,7 @@ class Sorter:
         return h * 100 / 13
 
     def hora_inici(self, horari):
-        horari = "24:00"
+        horai = "24:00"
         for g in horari:
             h = json.loads(g.horario)
             for c in h:
