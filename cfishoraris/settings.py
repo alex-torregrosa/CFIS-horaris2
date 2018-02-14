@@ -92,21 +92,22 @@ if 'DATABASE_URL' in os.environ:
 if 'REDIS_URL' in os.environ:
     CHANNEL_LAYERS = {
         "default": {
-            "BACKEND": "asgi_redis.RedisChannelLayer",
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
                 "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
             },
-            "ROUTING": "horaris.routing.channel_routing",
+
         },
     }
 else:
     CHANNEL_LAYERS = {
         "default": {
-            "BACKEND": "asgiref.inmemory.ChannelLayer",
-            "ROUTING": "horaris.routing.channel_routing",
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+
         },
     }
 
+ASGI_APPLICATION = "horaris.routing.application"
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
