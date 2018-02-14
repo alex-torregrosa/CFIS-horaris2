@@ -11,14 +11,17 @@ attrs==17.4.0             # via automat, pytest
 autobahn==17.10.1         # via daphne
 automat==0.6.0            # via twisted
 beautifulsoup4==4.6.0
+certifi==2018.1.18        # via requests
 channels-redis==2.0.2
 channels==2.0.2
+chardet==3.0.4            # via requests
 constantly==15.1.0        # via twisted
 daphne==2.0.3
 dj-database-url==0.4.2
 django==2.0.2
 hiredis==0.2.0            # via aioredis
 hyperlink==17.3.1         # via twisted
+idna==2.6                 # via requests
 incremental==17.5.0       # via twisted
 msgpack==0.5.4            # via channels-redis
 pluggy==0.6.0             # via pytest
@@ -27,7 +30,9 @@ pytest-asyncio==0.8.0
 pytest-django==3.1.2
 pytest==3.4.0             # via pytest-asyncio, pytest-django
 pytz==2018.3              # via django
+requests==2.18.4
 six==1.11.0               # via autobahn, automat, pytest, txaio
 twisted==17.9.0           # via daphne
 txaio==2.8.2              # via autobahn
+urllib3==1.22             # via requests
 zope.interface==4.4.3     # via twisted

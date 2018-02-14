@@ -2,9 +2,8 @@ Django
 channels
 channels_redis
 beautifulsoup4
+requests
 daphne
 dj-database-url
 pytest-django
 pytest-asyncio
-
-
