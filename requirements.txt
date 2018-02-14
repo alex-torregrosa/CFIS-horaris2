@@ -25,6 +25,7 @@ idna==2.6                 # via requests
 incremental==17.5.0       # via twisted
 msgpack==0.5.4            # via channels-redis
 pluggy==0.6.0             # via pytest
+psycopg2==2.7.4
 py==1.5.2                 # via pytest
 pytest-asyncio==0.8.0
 pytest-django==3.1.2
