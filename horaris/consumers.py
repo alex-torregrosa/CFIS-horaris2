@@ -18,6 +18,8 @@ class GenerationConsumer(JsonWebsocketConsumer):
         print("ws msg:", content)
         generator.send_progress(self, "Procesando datos...", 0)
         generator.calcula_horari(content, self)
+        print("horari calculat")
+        self.close(code=3125)
         # You can call:
         #self.send(text_data="Hello world!")
         # Or, to send a binary frame:
@@ -27,6 +29,6 @@ class GenerationConsumer(JsonWebsocketConsumer):
         # Or add a custom WebSocket error code!
         # self.close(code=4123)
 
-    def disconnect(self, close_code):
+    def websocket_disconnect(self, message):
         # Called when the socket close
-        print("Websocket connection closed")
+        print("Websocket connection closed", message)

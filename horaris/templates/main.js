@@ -161,6 +161,7 @@ function genHorario() {
         //$("#bt_prev").hide();
         $(".horloader").hide();
         $(".btn_holder").show();
+        ws.close();
       }
     };
   }
