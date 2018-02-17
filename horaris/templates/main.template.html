@@ -55,7 +55,8 @@
                 <a onclick="$('#modalajuda').modal('open')">Ajuda</a>
               </li>
               <li>
-                <a href="https://media.giphy.com/media/fbBDhlw5pPAYg/giphy.gif">Avís legal</a>
+                <!--<a href="https://media.giphy.com/media/fbBDhlw5pPAYg/giphy.gif">Avís legal</a>-->
+                <a onclick="$('#modalavis').modal('open')">Avís legal</a>
               </li>
             </ul>
           </div>
@@ -107,12 +108,12 @@
                       </div>
                       <!-- Submit button -->
                       <div class="col s12 m4">
-                        <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action">Afegir
-                          <i class="material-icons right">add</i>
+                        <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action">Afegir<i class="material-icons right">add</i>
                         </button>
                       </div>
                     </div>
                   </form>
+                  <button data-target="modalassig" class="btn modal-trigger">Totes les assignatures</button>
                 </div>
               </li>
 
@@ -250,6 +251,38 @@
     <div class="modal-footer">
       <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Tancar</a>
     </div>
+  </div>
+
+  <!-- Modal Avís Legal -->
+  <div id="modalavis" class="modal">
+    <div class="modal-content">
+      <h4>Avís legal</h4>
+      <p>Faith moves mountains but not proves inequalities.</p>
+      <!--Sauron gif-->
+      <iframe src="https://giphy.com/embed/fbBDhlw5pPAYg" width="480" height="200" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Tancar</a>
+    </div>
+  </div>
+
+  <!-- Modal Taula Assignatures -->
+  <div id="modalassig" class="modal">
+    <form id="all_assig"> <!-- javascript: afegir checkbox assigs a l'obrir el modal -->
+      <div class="modal-content">
+        <h4>Assignatures</h4>
+        <p>Aquí ha d'anar una llista d'assignatures.</p>
+        <p>
+          <input type="checkbox" id="test" />
+          <label for="test">Això és un exemple</label>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Cancelar</a>
+        <button class="btn waves-effect waves-light" type="reset" name="action">Esborrar</button>
+        <button class="btn waves-effect waves-light" type="submit" name="action">Acceptar</button>
+      </div>
+    </form>
   </div>
 
   <!-- Modal Horaris -->
