@@ -9,8 +9,16 @@ class TestsEtseib(TestCase):
         # Every test needs access to the request factory.
         self.factory = RequestFactory()
 
+    def test_etseib_not_exists(self):
+        """ Test loading fail when init has not runned yet"""
+        request = self.factory.get(reverse("etseibAssigs"))
+        response = etseib.loadAssigs(request)
+        self.assertEqual(response.status_code, 200)
+        print("RESPONSE:", response)
+        self.assertContains(response, "ERROR")
+
     def create(self):
-        """FIB loads correctly"""
+        """ETSEIB loads correctly"""
         request = self.factory.get(reverse("etseibInit"))
         response = etseib.loadCarreras(request)
         self.assertEqual(response.status_code, 200)
@@ -20,7 +28,7 @@ class TestsEtseib(TestCase):
         self.assertGreater(len(Carrera.objects.filter(facultad=facu)), 0)
 
     def load(self):
-        """FIB loads subject list correctly"""
+        """ETSEIB loads subject list correctly"""
         request = self.factory.get(reverse("etseibAssigs"))
         response = etseib.loadAssigs(request)
         self.assertEqual(response.status_code, 200)
@@ -34,9 +42,25 @@ class TestsEtseib(TestCase):
         """Test all the faculty"""
         self.create()
         self.load()
-        facu = Facultad.objects.get(name="etseib")
-        quatri = Quatri.objects.filter(facultad=facu)[0]
-        assig = Asignatura.objects.filter(cuatri=quatri)[0]
+
+        # assignatura amb subgrups (Dinàmica de sistemes)
+        assig = Asignatura.objects.filter(codiUPC="240043")[0]
+        grup = Grupo.objects.filter(assignatura=assig)
+        self.assertEqual(len(grup), 0)
+        etseib.cargaAssig(assig)
+        grup = Grupo.objects.filter(assignatura=assig)
+        self.assertGreater(len(grup), 0)
+
+        # assignatura sense subgrups (Mecànica)
+        assig = Asignatura.objects.filter(codiUPC="240133")[0]
+        grup = Grupo.objects.filter(assignatura=assig)
+        self.assertEqual(len(grup), 0)
+        etseib.cargaAssig(assig)
+        grup = Grupo.objects.filter(assignatura=assig)
+        self.assertGreater(len(grup), 0)
+
+        # assignatura amb labs random (Electromagnetisme)
+        assig = Asignatura.objects.filter(codiUPC="240031")[0]
         grup = Grupo.objects.filter(assignatura=assig)
         self.assertEqual(len(grup), 0)
         etseib.cargaAssig(assig)

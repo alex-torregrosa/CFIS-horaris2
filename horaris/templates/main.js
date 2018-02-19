@@ -31,10 +31,17 @@ function genLi(key, list) {
   });
 }
 
+function genInput(text, holder) {
+  holder.append(`<div class="col s12 m6 l4 left">
+  <input type = "checkbox" id = "assig_${assig_TOT[text]}" />
+  <label for="assig_${assig_TOT[text]}">${text}</label></div > `)
+}
+
 function updateCarreras() {
   var id = $("#facultad").val();
   updateSelect("#cuatri", cuatrisURL + "?f=" + id);
   updateSelect("#carrera", carrerasURL + "?f=" + id);
+  $("#list-opener").prop("disabled", true);
 }
 
 function updateAssignatura() {
@@ -45,15 +52,19 @@ function updateAssignatura() {
       $.getJSON(asignaturasURL + "?c=" + carrera + "&q=" + cuatri, function (data) {
         var mydict = {};
         assig_TOT = data;
+        var inputList = $(".check_container")
+        inputList.empty();
         for (var key in data) {
           mydict[key] = null;
+          genInput(key, inputList);
         }
-        $('#asignatura').autocomplete({
+        $('.asignatura').autocomplete({
           data: mydict,
           limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
           minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
         });
-        $('#asignatura').removeAttr("disabled");
+        $('.asignatura').removeAttr("disabled");
+        $('#list-opener').removeAttr("disabled");
       });
     }
   }
@@ -74,6 +85,8 @@ function updateSelect(id, url) {
 }
 
 function updateAssigList() {
+  console.log("List Updated")
+  console.log(asignaturas)
   var list = $("#assigList");
   list.empty();
   if (Object.keys(asignaturas).length === 0) list.append(emptyLi);
@@ -196,6 +209,15 @@ $(document).ready(function () {
       renderCal();
     }
   })
+  $('#modalassig').modal({
+    ready: function (modal, trigger) {
+      $("[id^=assig_]").each(function (index) {
+        name = $(this).next().text();
+        if (name in asignaturas) $(this).prop("checked", true);
+        else $(this).prop("checked", false);
+      });
+    }
+  })
 
   //Init Collapsibles
   $('.collapsible').collapsible();
@@ -231,12 +253,31 @@ $(document).ready(function () {
     }
   });
 
+  $("#btn_borrar").click(function (event) {
+    $("#all_assig").trigger("reset");
+  })
 
+  $("#btn_selectAssigs").click(function (event) {
+
+    console.log("Click!")
+    $("[id^=assig_]:checked").each(function (index) {
+      name = $(this).next().text();
+      if (assig_TOT[name] === undefined) {
+        alert("L'assignatura '" + name + "' no existeix");
+      } else {
+        asignaturas[name] = assig_TOT[name];
+      }
+    });
+    updateAssigList();
+    $("#modalassig").modal("close");
+  })
+
+  //Add subject
   $("#form_assig").submit(function (event) {
     console.log("JALR");
-    var name = $("#asignatura").val();
-    $("#asignatura").val("");
-    $("#asignatura").next().removeClass("active");
+    var name = $("#asignatura_main").val();
+    $("#asignatura_main").val("");
+    $("#asignatura_main").next().removeClass("active");
     if (assig_TOT[name] === undefined) {
       alert("L'assignatura no existeix");
     } else {

@@ -28,6 +28,11 @@
     .myPicker {
       width: 5rem;
     }
+
+    .myflex {
+      display: flex;
+      flex-wrap: wrap;
+    }
   </style>
 
 </head>
@@ -100,20 +105,22 @@
                         <label>Carrera</label>
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row hide-on-med-and-up">
                       <!-- Autocompletar assignatura -->
                       <div class="input-field col s12 m8">
-                        <input type="text" id="asignatura" class="autocomplete" disabled>
+                        <input type="text" class="autocomplete asignatura" id="asignatura_main" disabled>
                         <label for="autocomplete-input">Assignatura</label>
                       </div>
                       <!-- Submit button -->
                       <div class="col s12 m4">
-                        <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action">Afegir<i class="material-icons right">add</i>
+                        <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action">Afegir
+                          <i class="material-icons right">add</i>
                         </button>
                       </div>
                     </div>
                   </form>
-                  <button data-target="modalassig" class="btn modal-trigger">Totes les assignatures</button>
+                  <button data-target="modalassig" class="hide-on-small-only btn modal-trigger waves-effect waves-light blue darken-1" id="list-opener"
+                    disabled>Veure assignatures</button>
                 </div>
               </li>
 
@@ -267,22 +274,48 @@
   </div>
 
   <!-- Modal Taula Assignatures -->
-  <div id="modalassig" class="modal">
-    <form id="all_assig"> <!-- javascript: afegir checkbox assigs a l'obrir el modal -->
-      <div class="modal-content">
-        <h4>Assignatures</h4>
-        <p>Aquí ha d'anar una llista d'assignatures.</p>
-        <p>
-          <input type="checkbox" id="test" />
-          <label for="test">Això és un exemple</label>
-        </p>
+  <div id="modalassig" class="modal modal-fixed-footer">
+
+    <!-- javascript: afegir checkbox assigs a l'obrir el modal -->
+    <div class="modal-content">
+      <div class="row valign-wrapper">
+        <div class="col s12 m5">
+          <h4>Assignatures</h4>
+        </div>
+        <!-- Autocompletar assignatura -->
+        <div class="input-field col s12 m4 hide-on-small-only">
+          <input type="text" class="autocomplete asignatura" disabled>
+          <label for="autocomplete-input">Buscar</label>
+        </div>
+        <!-- Submit button -->
+        <div class="col s12 m3 hide-on-small-only">
+          <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action">Afegir
+            <i class="material-icons right">add</i>
+          </button>
+        </div>
       </div>
-      <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Cancelar</a>
-        <button class="btn waves-effect waves-light" type="reset" name="action">Esborrar</button>
-        <button class="btn waves-effect waves-light" type="submit" name="action">Acceptar</button>
-      </div>
-    </form>
+      <form id="all_assig">
+        <div class="row check_container myflex">
+          <div class="col s12 m6 l4">
+            <input type="checkbox" id="test" />
+            <label for="test">Dinàmica de sistemes</label>
+          </div>
+          <div class="col s12 m6 l4">
+            <input type="checkbox" id="test" />
+            <label for="test">Mecànica de midis continus</label>
+          </div>
+          <div class="col s12 m6 l4">
+            <input type="checkbox" id="test" />
+            <label for="test">exemple 3</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Cancelar</a>
+      <button class="btn waves-effect waves-light blue darken-1" id="btn_borrar">Esborrar</button>
+      <button class="btn waves-effect waves-light blue darken-1" id="btn_selectAssigs">Acceptar</button>
+    </div>
   </div>
 
   <!-- Modal Horaris -->

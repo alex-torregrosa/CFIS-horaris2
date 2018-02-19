@@ -28,7 +28,7 @@ def loadCarreras(request):
     ls = parsed.find(attrs={'name': 'selPla'})
     for child in ls.find_all('option'):
         #print(child["value"], str(child.string))
-        carrera = Carrera(name=child.string,
+        carrera = Carrera(name=child.string.lstrip(),
                           codigo=child["value"], facultad=etsetb)
         carrera.save()
 
