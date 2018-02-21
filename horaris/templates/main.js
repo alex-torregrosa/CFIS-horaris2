@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-// Coses de ser un template de django, ho emple amb les url correctes
+// Coses de ser un template de django, ho omple amb les url correctes
 var facusURL = "{% url 'facus' %}";
 var cuatrisURL = "{% url 'listq' %}";
 var carrerasURL = "{% url 'listcarr' %}";
@@ -10,7 +10,9 @@ var asignaturasURL = "{% url 'listassig' %}";
 var asignaturas = {};
 var assig_TOT = {};
 var actual = 0;
-var horarios = [[]];
+var horarios = [
+  []
+];
 
 function emptyopt() {
   return "<option value='' disabled selected>Tria</option>";
@@ -32,9 +34,9 @@ function genLi(key, list) {
 }
 
 function genInput(text, holder) {
-  holder.append(`<div class="col s12 m6 l4 left">
+  holder.append(`<div class="col s12 m6 l4 left"><label>
   <input type = "checkbox" id = "assig_${assig_TOT[text]}" />
-  <label for="assig_${assig_TOT[text]}">${text}</label></div > `)
+  <span>${text}</span></label></div > `);
 }
 
 function updateCarreras() {
@@ -52,7 +54,7 @@ function updateAssignatura() {
       $.getJSON(asignaturasURL + "?c=" + carrera + "&q=" + cuatri, function (data) {
         var mydict = {};
         assig_TOT = data;
-        var inputList = $(".check_container")
+        var inputList = $(".check_container");
         inputList.empty();
         for (var key in data) {
           mydict[key] = null;
@@ -80,13 +82,11 @@ function updateSelect(id, url) {
       me.append(`<option value="${data[key]}">${key}</option>`);
     }
     me.removeAttr("disabled");
-    me.material_select();
+    me.formSelect();
   });
 }
 
 function updateAssigList() {
-  console.log("List Updated")
-  console.log(asignaturas)
   var list = $("#assigList");
   list.empty();
   if (Object.keys(asignaturas).length === 0) list.append(emptyLi);
@@ -105,7 +105,7 @@ function genform() {
   $("#carrera").change(updateAssignatura);
   $("#cuatri").change(updateAssignatura);
 
-  $("select").material_select();
+  $("select").formSelect();
 }
 
 function renderCal() {
@@ -132,16 +132,19 @@ function genHorario() {
 
     //Llista de filtres amb estat
     filterList = {};
-    filterList["solapaments"] = $("#solapaments").prop('checked');
-    filterList["dinar"] = $("#puc_dinar").prop('checked');
-    filterList["inici"] = $("#hora_inici").prop('checked');
-    filterList["fi"] = $("#hora_inici").prop('checked');
+    filterList.solapaments = $("#solapaments").prop('checked');
+    filterList.dinar = $("#puc_dinar").prop('checked');
+    filterList.inici = $("#hora_inici").prop('checked');
+    filterList.fi = $("#hora_inici").prop('checked');
 
     fData = {};
-    fData["inici"] = $("#time_start").val();
-    fData["fi"] = $("#time_end").val();
+    fData.inici = $("#time_start").val();
+    fData.fi = $("#time_end").val();
 
-    filters = { "list": filterList, "data": fData };
+    filters = {
+      "list": filterList,
+      "data": fData
+    };
 
 
     // Fix for https connections
@@ -151,7 +154,10 @@ function genHorario() {
     // Send data when websocket is opened
     ws.onopen = function () {
       txt.text('Enviando datos');
-      ws.send(JSON.stringify({ "assignatures": asignaturas, "filters": filters }));
+      ws.send(JSON.stringify({
+        "assignatures": asignaturas,
+        "filters": filters
+      }));
     };
 
     ws.onmessage = function (message) {
@@ -203,26 +209,27 @@ $(document).ready(function () {
 
   //init modals
   $('.modal').modal();
-  $('#modal-horaris').modal({
-    ready: function (modal, trigger) {
+  M.Modal.init($('#modal-horaris'), {
+    onOpenEnd: function (modal, trigger) {
       renderCal(); // La primera no la fa be i cal fer una segona passada
       renderCal();
     }
-  })
-  $('#modalassig').modal({
-    ready: function (modal, trigger) {
+  });
+  M.Modal.init($('#modalassig'), {
+    onOpenStart: function (modal, trigger) {
       $("[id^=assig_]").each(function (index) {
         name = $(this).next().text();
         if (name in asignaturas) $(this).prop("checked", true);
         else $(this).prop("checked", false);
       });
     }
-  })
+  });
+
 
   //Init Collapsibles
   $('.collapsible').collapsible();
   //Init date pickers
-  $('.timepicker').pickatime({
+  $('.timepicker').timepicker({
     twelvehour: false, // Use AM/PM or 24-hour format
     donetext: 'OK', // text for done-button
     cleartext: 'Esborrar', // text for clear-button
@@ -255,11 +262,9 @@ $(document).ready(function () {
 
   $("#btn_borrar").click(function (event) {
     $("#all_assig").trigger("reset");
-  })
+  });
 
   $("#btn_selectAssigs").click(function (event) {
-
-    console.log("Click!")
     $("[id^=assig_]:checked").each(function (index) {
       name = $(this).next().text();
       if (assig_TOT[name] === undefined) {
@@ -270,7 +275,7 @@ $(document).ready(function () {
     });
     updateAssigList();
     $("#modalassig").modal("close");
-  })
+  });
 
   //Add subject
   $("#form_assig").submit(function (event) {
@@ -279,11 +284,29 @@ $(document).ready(function () {
     $("#asignatura_main").val("");
     $("#asignatura_main").next().removeClass("active");
     if (assig_TOT[name] === undefined) {
-      alert("L'assignatura no existeix");
+      alert("L'assignatura '" + name + "' no existeix");
     } else {
       asignaturas[name] = assig_TOT[name];
       updateAssigList();
     }
     event.preventDefault();
+  });
+
+  $("#search-assigs").click(function (event) {
+    console.log("JALR");
+    var name = $("#asignatura_search").val();
+    $("#asignatura_search").val("");
+    $("#asignatura_search").next().removeClass("active");
+    if (assig_TOT[name] === undefined) {
+      alert("L'assignatura '" + name + "' no existeix");
+    } else {
+      $("[id^=assig_]").each(function (index) {
+        var inp_name = $(this).next().text();
+        if (name == inp_name) {
+          $(this).prop("checked", true);
+        }
+      });
+    }
+
   });
 });

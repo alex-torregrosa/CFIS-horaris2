@@ -7,7 +7,7 @@
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- Compiled and minified CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/css/materialize.min.css">
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -33,6 +33,11 @@
       display: flex;
       flex-wrap: wrap;
     }
+
+    .autocomplete-content {
+      position: absolute;
+      top: 3rem;
+    }
   </style>
 
 </head>
@@ -40,7 +45,7 @@
 <body>
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <!-- Compiled and minified JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/js/materialize.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.min.css" media="screen"
@@ -80,9 +85,9 @@
         <div class="row">
           <div class="col s12">
             <ul class="collapsible">
-              <li>
+              <li class="active">
                 <!-- +Assignatures -->
-                <div class="collapsible-header active">
+                <div class="collapsible-header">
                   <i class="material-icons">add</i> Afegir assignatures</div>
                 <div class="collapsible-body">
                   <form id="form_assig">
@@ -284,12 +289,12 @@
         </div>
         <!-- Autocompletar assignatura -->
         <div class="input-field col s12 m4 hide-on-small-only">
-          <input type="text" class="autocomplete asignatura" disabled>
+          <input type="text" class="autocomplete asignatura" disabled id="asignatura_search">
           <label for="autocomplete-input">Buscar</label>
         </div>
         <!-- Submit button -->
         <div class="col s12 m3 hide-on-small-only">
-          <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action">Afegir
+          <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action" id="search-assigs">Afegir
             <i class="material-icons right">add</i>
           </button>
         </div>
@@ -319,7 +324,7 @@
   </div>
 
   <!-- Modal Horaris -->
-  <div id="modal-horaris" class="modal">
+  <div id="modal-horaris" class="modal modal-fixed-footer">
     <div class="modal-content">
       <h4>Horari</h4>
       <div class=" calholder">
