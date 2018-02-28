@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from ..models import Carrera, Facultad, Quatri, Asignatura, Grupo
 
 pars = {"client_id": "ZuSzxG72M8rOakSmQhGrD3kMZekVkxYhTM4AOxd9",
-        "format": "json", "lang": "es"}
+        "format": "json", "lang": "ca"}
 
 
 def loadCarreras(request):
@@ -60,28 +60,31 @@ def loadAssigs(request):
 
     assigsq = {}
     for q in cuatris:
-        print("Carregant",q.name,"...")
-        rq = requests.get("https://api.fib.upc.edu/v2/quadrimestres/"+q.codigo+"/assignatures/", params=pars)
+        print("Carregant", q.name, "...")
+        rq = requests.get("https://api.fib.upc.edu/v2/quadrimestres/" +
+                          q.codigo+"/assignatures/", params=pars)
         if not rq.ok:
             return HttpResponse("ERROR QUATRIS")
         quats = json.loads(rq.text)
-        assigsq[q]=quats["results"]
+        assigsq[q] = quats["results"]
     print("Quatris carregats")
     for c in carrs:
-        print("Carregant",c.name,"...")
-        rc = requests.get("https://api.fib.upc.edu/v2/assignatures/?pla="+c.codigo, params=pars)
+        print("Carregant", c.name, "...")
+        rc = requests.get(
+            "https://api.fib.upc.edu/v2/assignatures/?pla="+c.codigo, params=pars)
         if not rc.ok:
             return HttpResponse("ERROR PLANS")
         car = json.loads(rc.text)
         for q in assigsq:
             for asi in car["results"]:
                 if asi["id"] in assigsq[q]:
-                    a = Asignatura(name = asi["nom"], carrera = c,cuatri= q, codigo = asi["id"], codiUPC = asi["codi_upc"],loaded=False)
+                    a = Asignatura(name=asi["nom"], carrera=c, cuatri=q,
+                                   codigo=asi["id"], codiUPC=asi["codi_upc"], loaded=False)
                     a.save()
     print("DONE")
 
-
     return HttpResponse("OK")
+
 
 def cargaAssig(assig):
     # Eliminar grupos existentes de la asignatura
@@ -92,7 +95,8 @@ def cargaAssig(assig):
     assig.save()
 
     q = assig.cuatri
-    ra = requests.get("https://api.fib.upc.edu/v2/quadrimestres/"+q.codigo+"/classes/?codi_assig="+assig.codigo, params=pars)
+    ra = requests.get("https://api.fib.upc.edu/v2/quadrimestres/" +
+                      q.codigo+"/classes/?codi_assig="+assig.codigo, params=pars)
     if not ra.ok:
         return HttpResponse("ERROR GET")
     mods = json.loads(ra.text)
@@ -101,7 +105,7 @@ def cargaAssig(assig):
     subg = False
     normg = False
     for mod in mods["results"]:
-        if int(mod["grup"])%10 == 0:
+        if int(mod["grup"]) % 10 == 0:
             normg = True
         else:
             subg = True
@@ -124,9 +128,9 @@ def cargaAssig(assig):
         print("Cas dificil")
         for grupo in grups:
             gn = int(grupo)
-            if gn%10 != 0:
+            if gn % 10 != 0:
                 g = Grupo(name=str(grupo), assignatura=assig, subgrupo=True,
-                          codigo=str(grupo), horario=json.dumps(grups[grupo]+grups[str(gn-(gn%10))]))
+                          codigo=str(grupo), horario=json.dumps(grups[grupo]+grups[str(gn-(gn % 10))]))
                 g.save()
         pass
     else:
@@ -136,11 +140,12 @@ def cargaAssig(assig):
             g = Grupo(name=str(grupo), assignatura=assig, subgrupo=False,
                       codigo=str(grupo), horario=json.dumps(grups[grupo]))
             g.save()
-    
+
     # Join de grups
     myGroups = Grupo.objects.filter(assignatura=assig)
+    modified = {}
     for dbGroup in myGroups:
-        
+
         others = Grupo.objects.filter(assignatura=assig).exclude(pk=dbGroup.pk)
         found = False
         for ng in others:
@@ -149,13 +154,16 @@ def cargaAssig(assig):
                 #print("match!", dbGroup.name, ng.name)
                 break
         if found:
+            # print("merge", ng.name, dbGroup.name)
+            if dbGroup.name in modified:
+                dbGroup.name = modified[dbGroup.name]
+            modified[ng.name] = ng.name + "/" + dbGroup.name
             ng.name = ng.name + "/" + dbGroup.name
-            #print("newName", ng.name)
+
             ng.codigo = ng.name
             ng.save()
             dbGroup.delete()
-        
- 
+
     # Guardamos la asignatura
     assig.loaded = True
     assig.save()

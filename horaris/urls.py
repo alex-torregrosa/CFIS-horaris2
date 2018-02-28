@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from . import views, api
-from .loaders import etseib, fib
+from .loaders import etseib, fib, etsetb
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^api/etseib/init', etseib.loadCarreras, name='etseibInit'),
     url(r'^api/fib/init', fib.loadCarreras, name='fibInit'),
     url(r'^api/fib/assigs', fib.loadAssigs, name='fibAssigs'),
+    url(r'^api/etsetb/init', etsetb.loadCarreras, name='etsetbInit'),
+    url(r'^api/etsetb/assigs', etsetb.loadAssigs, name='etsetbAssigs'),
     url(r'^api/listq', api.listQ, name='listq'),
     url(r'^api/listcarr', api.listCarreras, name='listcarr'),
     url(r'^api/listassig', api.listAsigs, name='listassig'),

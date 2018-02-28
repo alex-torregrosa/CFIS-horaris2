@@ -41,7 +41,7 @@ class Asignatura(models.Model):
     lastLoadTime = models.DateField(auto_now=True)
 
     def __str__(self):
-        return self.name + " [" + str(self.codiUPC) + "]"
+        return self.name  # + " [" + str(self.codiUPC) + "]"
 
 
 class Grupo(models.Model):

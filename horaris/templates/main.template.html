@@ -1,64 +1,106 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>CFIS-horaris</title>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
+<head>
+  <meta charset="utf-8">
+  <title>CFIS-horaris</title>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/css/materialize.min.css">
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  </head>
-  <body>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" media="screen" title="no title">
-    <!-- <link rel="stylesheet" href="https://raw.githubusercontent.com/jackyliang/Material-Design-For-Full-Calendar/master/_materialFullCalendar.scss" media="screen" title="no title"> -->
+  <style>
+    div.switch.col {
+      padding-left: 0px;
+    }
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+    .myLabel {
+      font-size: 1rem;
+      color: #222222;
+    }
 
-    <div class="navbar-fixed">
-      <nav>
-        <div class="nav-wrapper blue darken-2">
-          <div class="row">
+    .switch label .lever {
+      margin-left: 5px;
+    }
+
+    .myPicker {
+      width: 5rem;
+    }
+
+    .myflex {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .autocomplete-content {
+      position: absolute;
+      top: 3rem;
+    }
+  </style>
+
+</head>
+
+<body>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/js/materialize.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.min.css" media="screen"
+    title="no title">
+  <!-- <link rel="stylesheet" href="https://raw.githubusercontent.com/jackyliang/Material-Design-For-Full-Calendar/master/_materialFullCalendar.scss" media="screen" title="no title"> -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.min.js"></script>
+
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper blue darken-2">
+        <div class="row">
           <div class="col s12">
             <a href="#" class="brand-logo">CFIS-horaris</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-              <li><a href="https://media.giphy.com/media/fbBDhlw5pPAYg/giphy.gif">Enllaç?</a></li>
+              <li>
+                <a onclick="$('#modalajuda').modal('open')">Ajuda</a>
+              </li>
+              <li>
+                <!--<a href="https://media.giphy.com/media/fbBDhlw5pPAYg/giphy.gif">Avís legal</a>-->
+                <a onclick="$('#modalavis').modal('open')">Avís legal</a>
+              </li>
             </ul>
           </div>
         </div>
-        </div>
-      </nav>
-    </div>
+      </div>
+    </nav>
+  </div>
 
-    <div class="container">
-      <!-- Your content goes here -->
+  <div class="container">
 
-      <div class="row">
-        <div class="col s12 l6">
-          <div class="row">
-            <div class="col s12">
-              <div class="card white">
-                <div class="card-content">
-                  <span class="card-title">Añadir asignaturas</span>
+    <div class="row">
+      <!-- Columna esquerra -->
+      <div class="col s12 l6">
+
+        <!-- Colapsable -->
+        <div class="row">
+          <div class="col s12">
+            <ul class="collapsible">
+              <li class="active">
+                <!-- +Assignatures -->
+                <div class="collapsible-header">
+                  <i class="material-icons">add</i> Afegir assignatures</div>
+                <div class="collapsible-body">
                   <form id="form_assig">
                     <div class="row">
                       <div class="input-field col s12 m6">
                         <select id="facultad" disabled>
                         </select>
-                        <label>Facultad</label>
+                        <label>Facultat</label>
                       </div>
                       <div class="input-field col s12 m6">
                         <select id="cuatri" disabled>
                         </select>
-                        <label>Cuatrimestre</label>
+                        <label>Quadrimestre</label>
                       </div>
                     </div>
                     <div class="row">
@@ -68,85 +110,254 @@
                         <label>Carrera</label>
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row hide-on-med-and-up">
+                      <!-- Autocompletar assignatura -->
                       <div class="input-field col s12 m8">
-                        <input type="text" id="asignatura" class="autocomplete" disabled>
-                        <label for="autocomplete-input">Asignatura</label>
+                        <input type="text" class="autocomplete asignatura" id="asignatura_main" disabled>
+                        <label for="autocomplete-input">Assignatura</label>
                       </div>
+                      <!-- Submit button -->
                       <div class="col s12 m4">
-                        <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action">Añadir
+                        <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action">Afegir
                           <i class="material-icons right">add</i>
                         </button>
                       </div>
                     </div>
                   </form>
+                  <button data-target="modalassig" class="hide-on-small-only btn modal-trigger waves-effect waves-light blue darken-1" id="list-opener"
+                    disabled>Veure assignatures</button>
                 </div>
-              </div>
-            </div>
-          </div>
+              </li>
 
-          <div class="row">
-            <div class="col s12">
-              <div class="card white">
-                <div class="card-content">
-                  <span class="card-title">Asignaturas</span>
-                  <ul class="collection" id="assigList">
+              <li>
+                <!-- Filtres -->
+                <div class="collapsible-header">
+                  <i class="material-icons">filter_list</i> Filtres</div>
+                <div class="collapsible-body">
+                  <ul class="collection" id="filter-holder">
+                    <!-- Solapaments -->
+                    <li class="collection-item">
+                      <div class="switch">
+                        <label>
+                          <input type="checkbox" checked disabled id="solapaments">
+                          <span class="lever"></span>
+                          <span class="myLabel">Evitar solapaments</span>
+                        </label>
+                      </div>
+                    </li>
+                    <!-- Dinar -->
+                    <li class="collection-item">
+                      <div class="switch">
+                        <label>
+                          <input type="checkbox" id="puc_dinar">
+                          <span class="lever"></span>
+                          <span class="myLabel">Temps per dinar</span>
+                        </label>
+                      </div>
+                    </li>
+                    <!-- Hora Inici -->
+                    <li class="collection-item">
+                      <div class="valign-wrapper">
+                        <div class="switch col">
+                          <label>
+                            <input type="checkbox" id="hora_inici">
+                            <span class="lever"></span>
+                            <span class="myLabel">No començar abans de les
+                            </span>
+                          </label>
+                        </div>
+                        <div class="input-field col myPicker">
+                          <input value="08:00" id="time_start" type="text" class="timepicker">
 
+                        </div>
+                      </div>
+                    </li>
+                    <!-- Hora Fi -->
+                    <li class="collection-item">
+                      <div class="valign-wrapper">
+                        <div class="switch col">
+                          <label>
+                            <input type="checkbox" id="hora_inici">
+                            <span class="lever"></span>
+                            <span class="myLabel">Acabar abans de les
+                            </span>
+                          </label>
+                        </div>
+                        <div class="input-field col myPicker">
+                          <input value="20:00" id="time_end" type="text" class="timepicker">
+
+                        </div>
+                      </div>
+                    </li>
                   </ul>
                 </div>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
         </div>
-        <div class="col s12 l6">
-          <div class="card white">
-            <div class="card-content">
-              <span class="card-title">Horario</span>
-              <div class="row btn_holder">
-                <div class="col s12 center">
-                  <a class="waves-effect waves-light btn blue darken-1" id="btn_gen">Generar</a>
-                </div>
-              </div>
-              <div class="row horloader hide">
-                <div class="col s12">
-                  <div class="progress">
-                    <div class="indeterminate blue"></div>
-                </div>
-                <div class="col s12 center">
-                  <span id="loading_txt">Calculando horario...</span>
-                </div>
-                </div>
-              </div>
-              <div class="row calholder">
-                <div class="row calcontrols">
 
-                  <div class="col s12">
-                    <div class="refreshholder left">
-                      <a id="bt_update" class="waves-effect waves-light btn blue darken-1 "><i class="material-icons">cached</i></a>  
-                    </div>
-                    <span id="cal_txt">0/0</span>
-                    <div class="nav_btn_holder right">
 
-                      <a id="bt_prev" class="waves-effect waves-light btn blue darken-1 "><i class="material-icons">chevron_left</i></a>
-                      <a id="bt_next" class="waves-effect waves-light btn blue darken-1 "><i class="material-icons">chevron_right</i></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="row cal">
-                  <div class="col s12 center">
-                    <div id="calendar"></div>
-                  </div>
-                </div>
 
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
+      <!-- Columna dreta -->
+      <div class="col s12 l6">
+        <!-- Llista d'assignatures -->
+        <div class="row">
+          <div class="col s12">
+            <div class="card white">
+              <div class="card-content">
+                <span class="card-title">Assignatures</span>
+                <ul class="collection" id="assigList">
+
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Fila Generador -->
+        <div class="row">
+          <div class="col s12">
+            <!-- Zona horari -->
+            <div class="card white">
+              <div class="card-content">
+                <span class="card-title">Horari</span>
+
+                <!-- Botó Generar -->
+                <div class="row btn_holder">
+                  <div class="col s12 center">
+                    <a class="waves-effect waves-light btn blue darken-1" id="btn_gen">Generar</a>
+                  </div>
+                </div>
+
+                <!-- Barra carrega horari -->
+                <div class="row horloader hide">
+                  <div class="col s12">
+                    <div class="progress">
+                      <div class="indeterminate blue"></div>
+                    </div>
+                    <div class="col s12 center">
+                      <span id="loading_txt">Calculant horari...</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!-- End Card -->
+          </div>
+        </div>
+
+
+      </div>
     </div>
 
-    <script src ="{% url 'mainjs' %}"></script>
+  </div>
 
-  </body>
+  <!-- Modal Ajuda -->
+  <div id="modalajuda" class="modal">
+    <div class="modal-content">
+      <h4>Ajuda</h4>
+      <p>No, així no aprovaras fonaments, ho sento.</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Tancar</a>
+    </div>
+  </div>
+
+  <!-- Modal Avís Legal -->
+  <div id="modalavis" class="modal">
+    <div class="modal-content">
+      <h4>Avís legal</h4>
+      <p>Faith moves mountains but not proves inequalities.</p>
+      <!--Sauron gif-->
+      <iframe src="https://giphy.com/embed/fbBDhlw5pPAYg" width="480" height="200" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Tancar</a>
+    </div>
+  </div>
+
+  <!-- Modal Taula Assignatures -->
+  <div id="modalassig" class="modal modal-fixed-footer">
+
+    <!-- javascript: afegir checkbox assigs a l'obrir el modal -->
+    <div class="modal-content">
+      <div class="row valign-wrapper">
+        <div class="col s12 m5">
+          <h4>Assignatures</h4>
+        </div>
+        <!-- Autocompletar assignatura -->
+        <div class="input-field col s12 m4 hide-on-small-only">
+          <input type="text" class="autocomplete asignatura" disabled id="asignatura_search">
+          <label for="autocomplete-input">Buscar</label>
+        </div>
+        <!-- Submit button -->
+        <div class="col s12 m3 hide-on-small-only">
+          <button class="btn waves-effect waves-light blue darken-1" type="submit" name="action" id="search-assigs">Afegir
+            <i class="material-icons right">add</i>
+          </button>
+        </div>
+      </div>
+      <form id="all_assig">
+        <div class="row check_container myflex">
+          <div class="col s12 m6 l4">
+            <input type="checkbox" id="test" />
+            <label for="test">Dinàmica de sistemes</label>
+          </div>
+          <div class="col s12 m6 l4">
+            <input type="checkbox" id="test" />
+            <label for="test">Mecànica de midis continus</label>
+          </div>
+          <div class="col s12 m6 l4">
+            <input type="checkbox" id="test" />
+            <label for="test">exemple 3</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Cancelar</a>
+      <button class="btn waves-effect waves-light blue darken-1" id="btn_borrar">Esborrar</button>
+      <button class="btn waves-effect waves-light blue darken-1" id="btn_selectAssigs">Acceptar</button>
+    </div>
+  </div>
+
+  <!-- Modal Horaris -->
+  <div id="modal-horaris" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>Horari</h4>
+      <div class=" calholder">
+        <div class="row calcontrols">
+
+          <div class="col s12">
+            <span id="cal_txt">0/0</span>
+            <div class="nav_btn_holder right">
+
+              <a id="bt_prev" class="waves-effect waves-light btn blue darken-1 ">
+                <i class="material-icons">chevron_left</i>
+              </a>
+              <a id="bt_next" class="waves-effect waves-light btn blue darken-1 ">
+                <i class="material-icons">chevron_right</i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row cal">
+
+          <div id="calendar"></div>
+
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect  btn-flat">Tancar</a>
+    </div>
+  </div>
+
+  <script src="{% url 'mainjs' %}"></script>
+
+</body>
+
 </html>

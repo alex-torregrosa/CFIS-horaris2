@@ -1,18 +1,20 @@
-import requests, json
+import requests
+import json
 from bs4 import BeautifulSoup
 from django.http import HttpResponse
 from ..models import Carrera, Facultad, Quatri, Asignatura, Grupo
 
+
 def loadCarreras(request):
-    print("Loading career list... " ,end="")
-    r = requests.get("https://guiadocent.etseib.upc.edu/simgen/form/simgen.php?lang=es")
+    print("Loading career list... ", end="")
+    r = requests.get(
+        "https://guiadocent.etseib.upc.edu/simgen/form/simgen.php?lang=ca")
 
     # r = requests.get("http://localhost:8888/tst.html")
-    parsed = BeautifulSoup(r.text,"html.parser")
+    parsed = BeautifulSoup(r.text, "html.parser")
     print("OK")
 
-
-    print("Clearing etseib... ",end="")
+    print("Clearing etseib... ", end="")
     # Si existeix la etseib borrala
     try:
         etseib = Facultad.objects.get(name="etseib")
@@ -24,19 +26,22 @@ def loadCarreras(request):
     etseib.save()
     print("OK")
     # Busca les carreres
-    ls = parsed.find(attrs={'name':'degree'})
+    ls = parsed.find(attrs={'name': 'degree'})
     for child in ls.find_all('option'):
         # print(child["value"],str(child.string))
-        carrera = Carrera(name=child.string,codigo=child["value"],facultad=etseib)
+        carrera = Carrera(name=child.string,
+                          codigo=child["value"], facultad=etseib)
         carrera.save()
     # Busca els quatris
-    ls = parsed.find(attrs={'name':'semester'})
+    ls = parsed.find(attrs={'name': 'semester'})
     for child in ls.find_all('option'):
         # print(child["value"],str(child.string))
-        quatri = Quatri(name=child.string,codigo=child["value"],facultad=etseib)
+        quatri = Quatri(name=child.string,
+                        codigo=child["value"], facultad=etseib)
         quatri.save()
     # Magic
     return HttpResponse("OK")
+
 
 def loadAssigs(request):
 
@@ -45,7 +50,7 @@ def loadAssigs(request):
     try:
         etseib = Facultad.objects.get(name="etseib")
     except Facultad.DoesNotExist:
-        #Si, la has liat una mica parda...
+        # Si, la has liat una mica parda...
         # potser cridar loadCarreras(request)? <- la HttpResponse petaria...
         # Si l'ordre de crida es fa be, aixó no hauria de passar
         return HttpResponse("ERROR: ETSEIB NOT FOUND")
@@ -56,18 +61,20 @@ def loadAssigs(request):
     # TODO: executar amb channels???
     for mcarrera in carrs:
         # Eliminem totes les assignatures existents
-        Asignatura.objects.filter(carrera = mcarrera).delete()
+        Asignatura.objects.filter(carrera=mcarrera).delete()
 
         for mcuatri in cuatris:
-            r = requests.get("https://guiadocent.etseib.upc.edu/simgen/form/simgen.php?lang=es&degree="+str(mcarrera.codigo)+"&semester="+mcuatri.codigo)
-            parsed = BeautifulSoup(r.text,"html.parser")
-            print("Downloaded: ",mcuatri, mcarrera)
-            asigs = parsed.find_all(attrs={'type':'checkbox'})
+            r = requests.get("https://guiadocent.etseib.upc.edu/simgen/form/simgen.php?lang=ca&degree=" +
+                             str(mcarrera.codigo)+"&semester="+mcuatri.codigo)
+            parsed = BeautifulSoup(r.text, "html.parser")
+            print("Downloaded: ", mcuatri, mcarrera)
+            asigs = parsed.find_all(attrs={'type': 'checkbox'})
 
             if asigs != None:
                 for el in asigs:
                     # Creació de les assignatures
-                    asignat = Asignatura(name = el.parent.next_sibling.next_sibling.next_sibling.string, carrera = mcarrera,cuatri= mcuatri, codigo = el["name"], codiUPC = el.parent.next_sibling.next_sibling.string,loaded=False)
+                    asignat = Asignatura(name=el.parent.next_sibling.next_sibling.next_sibling.string, carrera=mcarrera,
+                                         cuatri=mcuatri, codigo=el["name"], codiUPC=el.parent.next_sibling.next_sibling.string, loaded=False)
                     # print(el.parent.next_sibling.next_sibling.next_sibling)
                     asignat.save()
             else:
@@ -75,6 +82,7 @@ def loadAssigs(request):
                 print("No se han encontrado asignaturas")
     # Com no,
     return HttpResponse("OK")
+
 
 def cargaAssig(assig):
     # Eliminar grupos existentes de la asignatura
@@ -84,7 +92,7 @@ def cargaAssig(assig):
     # Cargar lista de grupos
     deg = assig.carrera
     q = assig.cuatri
-    r = requests.get("https://guiadocent.etseib.upc.edu/simgen/form/simulator.php?lang=es&degree=" +
+    r = requests.get("https://guiadocent.etseib.upc.edu/simgen/form/simulator.php?lang=ca&degree=" +
                      str(deg.codigo) + "&semester=" + q.codigo + "&" + assig.codigo)
     parsed = BeautifulSoup(r.text, "html.parser")
     grups = parsed.find_all(attrs={'type': 'checkbox'})
@@ -126,11 +134,13 @@ def cargaAssig(assig):
             g = Grupo(name=str(grupo), assignatura=assig, subgrupo=False,
                       codigo=grupos[grupo]["id"], horario=json.dumps(grupos[grupo]["horari"]))
             g.save()
-    
+
+    print("Joining groups")
     # Join de grups
     myGroups = Grupo.objects.filter(assignatura=assig)
+    modified = {}
     for dbGroup in myGroups:
-        
+
         others = Grupo.objects.filter(assignatura=assig).exclude(pk=dbGroup.pk)
         found = False
         h2 = set()
@@ -141,15 +151,20 @@ def cargaAssig(assig):
             for el in json.loads(ng.horario):
                 h1.add(json.dumps(el))
             if h1 == h2:
-                found= True
+                found = True
                 break
 
         if found:
+            # print("merge", ng.name, dbGroup.name)
+            if dbGroup.name in modified:
+                dbGroup.name = modified[dbGroup.name]
+            modified[ng.name] = ng.name + "/" + dbGroup.name
             ng.name = ng.name + "/" + dbGroup.name
-            #print("newName", ng.name)
+
             ng.codigo = ng.name
             ng.save()
             dbGroup.delete()
+
     # Guardamos la asignatura
     assig.loaded = True
     assig.save()
@@ -157,7 +172,7 @@ def cargaAssig(assig):
 
 def getHorari(grau, quatri, grup):
     # Descargamos la tabla del horario
-    r = requests.get("https://guiadocent.etseib.upc.edu/simgen/action/result.php?lang=es&degree=" +
+    r = requests.get("https://guiadocent.etseib.upc.edu/simgen/action/result.php?lang=ca&degree=" +
                      grau + "&semester=" + quatri + "&" + grup)
     parsed = BeautifulSoup(r.text, "html.parser")
     # Buscamos los bloques del color correcto
@@ -180,14 +195,14 @@ def getHorari(grau, quatri, grup):
             "end": end,
             "day": size
         }
-        #ModuleMerger
+        # ModuleMerger
         added = False
         for mod in horari:
             if mod["day"] == modul["day"]:
                 # print(mod["start"], modul["start"], mod["start"] == modul["start"])
                 if mod["start"] == modul["start"]:
                     added = True
-                    if modul["end"]>mod["end"]:
+                    if modul["end"] > mod["end"]:
                         mod["end"] = modul["end"]
 
                     break
@@ -197,7 +212,5 @@ def getHorari(grau, quatri, grup):
                     break
         if not added:
             horari.append(modul)
-
-
 
     return horari

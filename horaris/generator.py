@@ -1,86 +1,84 @@
+""" Generador de horaris"""
 import json
-import requests
 import time
+from horaris import filters
 from .models import Asignatura, Grupo
-from bs4 import BeautifulSoup
-from .loaders import etseib, fib
-import horaris.filters as filters
+from .loaders import etseib, fib, etsetb
 from .sorter import Sorter
 # Aqui se hace la magia de los horarios
 
 
-def sendProgress(msg, text, progress):
-    # Función magica que se comunica con el cliente mediante ligeras vibraciones en la fuerza (a.k.a websockets)
+def send_progress(consum, text, progress):
+    """ Función magica que se comunica con el cliente mediante ligeras vibraciones
+    en la fuerza (a.k.a websockets)"""
     res = {
-        "text": json.dumps({
-            "progress": progress,
-            "text": text,
-            "completed": False
-        })
+        "progress": progress,
+        "text": text,
+        "completed": False
     }
-    # Sino triga massa poc i s'omple la cua al treballar amb moltes assignatures
-    time.sleep(0.05)
-    msg.reply_channel.send(res, immediately=True)
+
+    consum.send_json(res)
 
 
-def calculaHorari(asignaturas, msg):
-    # Funció PRINCIPAL del websocket
+def calcula_horari(data, consumer):
+    """Funció PRINCIPAL del websocket"""
     assigs = []
     # Fetch classes
-    for el in asignaturas:
-        assigs.append(Asignatura.objects.get(pk=asignaturas[el]))
-    sendProgress(msg, "Asignaturas cargadas", 10)
+    for el in data["assignatures"]:
+        assigs.append(Asignatura.objects.get(pk=data["assignatures"][el]))
+    send_progress(consumer, "Asignatures carregades", 10)
     total = len(assigs)
     for x in range(0, total):
-        sendProgress(msg, "Cargando horarios para " +
-                     assigs[x].name, 10 + (x / total) * 20)
+        send_progress(consumer, "Carregant horaris per a " +
+                      assigs[x].name, 10 + (x / total) * 20)
         if not assigs[x].loaded:
             print("Carregant horari de",  assigs[x].name)
             if assigs[x].carrera.facultad.name == "etseib":
                 etseib.cargaAssig(assigs[x])
             elif assigs[x].carrera.facultad.name == "fib":
                 fib.cargaAssig(assigs[x])
+            elif assigs[x].carrera.facultad.name == "etsetb":
+                etsetb.cargaAssig(assigs[x])
 
-    sendProgress(msg, "Generant horaris...", 30)
+    send_progress(consumer, "Generant horaris...", 30)
     # Ara toca obtenir tots els grups
     groups = []
     for i in range(0, total):
         groups.append(Grupo.objects.filter(assignatura=assigs[i]))
     # Generem els horaris
-    horaris = genHoraris(groups)
+    horaris = genHoraris(groups, data["filters"])
 
-    sendProgress(msg, str(len(horaris)) +
-                 " horarios posibles, ordenando...", 40)
+    send_progress(consumer, str(len(horaris)) +
+                  " horaris possibles, ordenant...", 40)
 
     s = Sorter()
     s.set_fi_p(10)
 
     horaris.sort(key=s.puntua, reverse=True)
 
-    sendProgress(msg, "Descargando...", 90)
+    send_progress(consumer, "Descarregant...", 90)
     if len(horaris) > 0:
         exphor = []
         # Només exportem els 100 primers horaris
         for x in range(0, min(100, len(horaris))):
             exphor.append(exporta(horaris[x]))
         res = {
-            "text": json.dumps({
-                "horaris": exphor,
-                "completed": True
-            })
+            "horaris": exphor,
+            "completed": True
         }
-        msg.reply_channel.send(res, immediately=True)
+
+        consumer.send_json(res)
     else:
-        sendProgress(msg, "Ningún horario encontrado", 100)
+        send_progress(consumer, "Cap horari trobat", 100)
 
 
-def genHoraris(grups):
+def genHoraris(grups, filtres):
     # Genera els horaris a partir de grups (recursivament)
     if len(grups) == 0:
         return []
     g = grups[0]
     # Generem els horaris de tots els grups menys el primer
-    horig = genHoraris(grups[1:])
+    horig = genHoraris(grups[1:], filtres)
     horaris = []
     if horig == []:
         for grup in g:
@@ -92,7 +90,7 @@ def genHoraris(grups):
                 if not filters.solapament(h, grup):  # Filtre de solapaments
                     horaris.append(h + [grup])
     # del horig
-    print(len(horaris), len(grups), g[0])
+    # print(len(horaris), len(grups), g[0]) #peta si la query no retorna res (g[0] = QuerySet [])
     return horaris
 
 
