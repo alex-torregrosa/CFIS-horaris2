@@ -36,4 +36,5 @@ six==1.11.0               # via autobahn, automat, pytest, txaio
 twisted==17.9.0           # via daphne
 txaio==2.8.2              # via autobahn
 urllib3==1.22             # via requests
+whitenoise==3.3.1
 zope.interface==4.4.3     # via twisted
