@@ -93,24 +93,25 @@ def cargaAssig(assig):
     grups = {}
     subg = False
     normg = False
-    for g in mods["invdata"][0]["grups"]:
-        if g["horaris"] is not None:
-            for h in g["horaris"]:
-                #{'hora_fin': '19:00:00', 'dia': '5', 'hora_ini': '17:30:00', 'grup': '10'}
-                if int(h["grup"]) % 10 == 0:
-                    normg = True
-                else:
-                    subg = True
+    if mods["invdata"]:
+        for g in mods["invdata"][0]["grups"]:
+            if g["horaris"] is not None:
+                for h in g["horaris"]:
+                    #{'hora_fin': '19:00:00', 'dia': '5', 'hora_ini': '17:30:00', 'grup': '10'}
+                    if int(h["grup"]) % 10 == 0:
+                        normg = True
+                    else:
+                        subg = True
 
-                if not h["grup"] in grups:
-                    grups[h["grup"]] = []
+                    if not h["grup"] in grups:
+                        grups[h["grup"]] = []
 
-                modul = {
-                    "start": h["hora_ini"][:5],
-                    "end": h["hora_fin"][:5],
-                    "day": int(h["dia"])
-                }
-                grups[h["grup"]].append(modul)
+                    modul = {
+                        "start": h["hora_ini"][:5],
+                        "end": h["hora_fin"][:5],
+                        "day": int(h["dia"])
+                    }
+                    grups[h["grup"]].append(modul)
 
     if normg and subg:
         for g in grups:

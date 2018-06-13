@@ -32,7 +32,7 @@ def calcula_horari(data, consumer):
         send_progress(consumer, "Carregant horaris per a " +
                       assigs[x].name, 10 + (x / total) * 20)
         if not assigs[x].loaded:
-            print("Carregant horari de",  assigs[x].name)
+            print("Carregant horari de", assigs[x].name)
             if assigs[x].carrera.facultad.name == "etseib":
                 etseib.cargaAssig(assigs[x])
             elif assigs[x].carrera.facultad.name == "fib":
@@ -57,7 +57,7 @@ def calcula_horari(data, consumer):
     horaris.sort(key=s.puntua, reverse=True)
 
     send_progress(consumer, "Descarregant...", 90)
-    if len(horaris) > 0:
+    if horaris:
         exphor = []
         # Només exportem els 100 primers horaris
         for x in range(0, min(100, len(horaris))):
@@ -74,20 +74,36 @@ def calcula_horari(data, consumer):
 
 def genHoraris(grups, filtres):
     # Genera els horaris a partir de grups (recursivament)
-    if len(grups) == 0:
+    if not grups:
         return []
-    g = grups[0]
-    # Generem els horaris de tots els grups menys el primer
+    old_g = grups[0]
+    g = []
+    # Filtra els grups
+    for grup in old_g:
+        filtrat = True
+        if filtres["list"]["inici"]:
+            filtrat = not filters.inici(grup, filtres["data"]["inici"])
+        if filtrat and filtres["list"]["fi"]:
+            filtrat = not filters.fi(grup, filtres["data"]["fi"])
+        if filtrat:
+            g.append(grup)
+    if not g:
+        return []
+
+        # Generem els horaris de tots els grups menys el primer [BACKTRACKING]
     horig = genHoraris(grups[1:], filtres)
     horaris = []
-    if horig == []:
+    if horig == [] and not grups[1:]:
         for grup in g:
             hor = [grup]
             horaris.append(hor)
     else:
         for grup in g:
             for h in horig:
-                if not filters.solapament(h, grup):  # Filtre de solapaments
+                # Filtre obligatori de solapaments
+                filtrat = not filters.solapament(h, grup)
+
+                if filtrat:
                     horaris.append(h + [grup])
     # del horig
     # print(len(horaris), len(grups), g[0]) #peta si la query no retorna res (g[0] = QuerySet [])

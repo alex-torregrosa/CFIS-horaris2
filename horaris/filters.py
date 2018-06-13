@@ -20,6 +20,24 @@ def solapament(horari, grup):
     return False
 
 
+def inici(grup, hora):
+    # Indica si un grup te classes abans de l'hora donada
+    hor = json.loads(grup.horario)
+    for classe in hor:
+        if classe["start"] < hora:
+            return True
+    return False
+
+
+def fi(grup, hora):
+    # Indica si un grup te classes despres de l'hora donada
+    hor = json.loads(grup.horario)
+    for classe in hor:
+        if classe["end"] > hora:
+            return True
+    return False
+
+
 def solapen(c1, c2):
     # Indica si dues classes es solapen
 

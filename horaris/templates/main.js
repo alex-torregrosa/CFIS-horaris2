@@ -120,8 +120,8 @@ function renderCal() {
 
 function genHorario() {
   if (Object.keys(asignaturas).length === 0) alert("Has d'afegir alguna assignatura!");
-  else if ($("#hora_inici").prop('checked') && $("#time_start").val() != "") alert("Hora d'inici incorrecta");
-  else if ($("#hora_fi").prop('checked') && $("#time_end").val() != "") alert("Hora de finalització incorrecta");
+  else if ($("#hora_inici").prop('checked') && $("#time_start").val() == "") alert("Hora d'inici incorrecta");
+  else if ($("#hora_fi").prop('checked') && $("#time_end").val() == "") alert("Hora de finalització incorrecta");
   else {
     $(".horloader").removeClass("hide");
     $(".horloader").show();
@@ -135,7 +135,7 @@ function genHorario() {
     filterList.solapaments = $("#solapaments").prop('checked');
     filterList.dinar = $("#puc_dinar").prop('checked');
     filterList.inici = $("#hora_inici").prop('checked');
-    filterList.fi = $("#hora_inici").prop('checked');
+    filterList.fi = $("#hora_fi").prop('checked');
 
     fData = {};
     fData.inici = $("#time_start").val();
