@@ -1,13 +1,19 @@
 from django.db import models
+from django.utils.html import format_html
+from django.urls import reverse
 
 # Create your models here.
 
 
 class Facultad(models.Model):
     name = models.CharField(max_length=100)
+    last_updated = models.DateField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return self.name.upper()
+
+    class Meta:
+        verbose_name_plural = "facultades"
 
 
 class Carrera(models.Model):
