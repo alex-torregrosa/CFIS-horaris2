@@ -230,10 +230,12 @@ $(document).ready(function () {
   $('.collapsible').collapsible();
   //Init date pickers
   $('.timepicker').timepicker({
-    twelvehour: false, // Use AM/PM or 24-hour format
-    donetext: 'OK', // text for done-button
-    cleartext: 'Esborrar', // text for clear-button
-    canceltext: 'Sortir', // Text for cancel-button
+    twelveHour: false, // Use AM/PM or 24-hour format
+    i18n: {
+      done: 'OK', // text for done-button
+      clear: 'Esborrar', // text for clear-button
+      cancel: 'Sortir', // Text for cancel-button
+    }
   });
 
   $("#btn_gen").click(genHorario);
