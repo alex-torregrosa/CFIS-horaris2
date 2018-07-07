@@ -114,12 +114,17 @@ def cargaAssig(assig):
             grups[mod["grup"]] = []
 
         end = mod["inici"].split(":")
-        end = str(int(end[0])+mod["durada"])+":"+end[1]
-
+        end = str(int(end[0]) + mod["durada"]) + ":" + end[1]
+        if len(end) < 5:
+            end = "0" + end
+        lab = 0
+        if mod["tipus"] == "L":
+            lab = 1
         modul = {
             "start": mod["inici"],
             "end": end,
-            "day": mod["dia_setmana"]
+            "day": mod["dia_setmana"],
+            "type": lab  # 0: Teoria, 1: Lab normal, 2: Lab random d'indus
         }
         grups[mod["grup"]].append(modul)
 

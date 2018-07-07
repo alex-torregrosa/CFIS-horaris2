@@ -109,7 +109,8 @@ def cargaAssig(assig):
                     modul = {
                         "start": h["hora_ini"][:5],
                         "end": h["hora_fin"][:5],
-                        "day": int(h["dia"])
+                        "day": int(h["dia"]),
+                        "type": 0  # 0: Teoria, 1: Lab normal, 2: Lab random d'indus
                     }
                     grups[h["grup"]].append(modul)
 

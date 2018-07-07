@@ -44,6 +44,14 @@ def solapen(c1, c2):
     # Dia diferent
     if c1["day"] != c2["day"]:
         return False
+
+    # Fix per als labs random d'indus. (es pot solapar amb teoria, no labs)
+    # TODO: fer-ho opcional
+    if c1["type"] == 2 and c2["type"] == 0:
+        return False
+    if c2["type"] == 2 and c1["type"] == 0:
+        return False
+
     # Inici o final iguals
     if c1["start"] == c2["start"] or c1["end"] == c2["end"]:
         return True

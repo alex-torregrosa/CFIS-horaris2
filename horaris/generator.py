@@ -16,7 +16,7 @@ def send_progress(consum, text, progress):
         "text": text,
         "completed": False
     }
-
+    print("[WS] ", text)
     consum.send_json(res)
 
 
@@ -55,7 +55,8 @@ def calcula_horari(data, consumer):
     s.set_fi_p(10)
 
     horaris.sort(key=s.puntua, reverse=True)
-
+    for elemento1 in horaris[:5]:
+        print(elemento1, s.puntua(elemento1))
     send_progress(consumer, "Descarregant...", 90)
     if horaris:
         exphor = []
