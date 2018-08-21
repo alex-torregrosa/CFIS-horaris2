@@ -186,14 +186,18 @@ def getHorari(grau, quatri, grup):
         sibs = el.parent.parent.parent.previous_siblings
         size = 0
         # Em sona que no es podia utilitzar un .size(), VALE, no em jutgis... (Si ho fas, WA abans que EE)
-        for e in sibs:
+        for sauron in sibs:
             size += 1
         [start, end] = h.split("-")
+        lab = 0
+        if el.contents[1].split(" ")[2] == "(L)":
+            lab = 2  # Es un lab random d'indus (No se si hi ha normals)
         # I així queda definida la increible estructura de dades que utilitzarem per a guardar horaris
         modul = {
             "start": start,
             "end": end,
-            "day": size
+            "day": size,
+            "type": lab  # 0: Teoria, 1: Lab normal, 2: Lab random d'indus
         }
         # ModuleMerger
         added = False

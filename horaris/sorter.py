@@ -37,8 +37,11 @@ class Sorter:
             for classe in horari_grup:
                 if classe["end"] > horaf:
                     horaf = classe["end"]
+                    if horaf == "9:00":
+                        print(grup)
         hora = horaf.split(":")
         hora = int(hora[0]) + (int(hora[1]) / 60) - 8
+        print(hora, horaf)
         hora = 13 - hora
         return hora * 100 / 13
 

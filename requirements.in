@@ -8,3 +8,4 @@ dj-database-url
 pytest-django
 pytest-asyncio
 psycopg2
+whitenoise
