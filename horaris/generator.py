@@ -125,8 +125,11 @@ def exporta(horari):
         for c in h:
             mt = time.localtime(baset + (c["day"] - 1) * 24 * 3600)
             st = time.strftime("%Y-%m-%dT", mt)
+            lab = c["type"] == 1 or c["type"] == 2
             ev = {}
             ev["title"] = n + " (" + ng + ")"
+            if lab:
+                ev["title"] += " [L]"
             ev["start"] = st + c["start"]
             ev["end"] = st + c["end"]
             ev["color"] = colors[act]
