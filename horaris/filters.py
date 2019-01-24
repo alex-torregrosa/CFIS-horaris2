@@ -20,6 +20,16 @@ def solapament(horari, grup):
     return False
 
 
+def PROP41(grup):
+    # print(grup)
+    return True
+    if grup.assignatura.codigo == 'PROP':
+        if grup.name == '41':
+            return True
+        return False
+    return True
+
+
 def inici(grup, hora):
     # Indica si un grup te classes abans de l'hora donada
     hor = json.loads(grup.horario)

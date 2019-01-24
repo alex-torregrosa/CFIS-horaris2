@@ -97,13 +97,14 @@ def genHoraris(grups, filtres):
     if horig == [] and not grups[1:]:
         for grup in g:
             hor = [grup]
-            horaris.append(hor)
+            if filters.PROP41(grup):
+                horaris.append(hor)
     else:
         for grup in g:
             for h in horig:
                 # Filtre obligatori de solapaments
                 filtrat = not filters.solapament(h, grup)
-
+                filtrat = filtrat and filters.PROP41(grup)
                 if filtrat:
                     horaris.append(h + [grup])
     # del horig
