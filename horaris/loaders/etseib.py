@@ -73,7 +73,7 @@ def loadAssigs(request):
             if asigs != None:
                 for el in asigs:
                     # Creació de les assignatures
-                    asignat = Asignatura(name=el.parent.next_sibling.next_sibling.next_sibling.string, carrera=mcarrera,
+                    asignat = Asignatura(name=el.parent.next_sibling.next_sibling.next_sibling.next_sibling.string, carrera=mcarrera,
                                          cuatri=mcuatri, codigo=el["name"], codiUPC=el.parent.next_sibling.next_sibling.string, loaded=False)
                     # print(el.parent.next_sibling.next_sibling.next_sibling)
                     asignat.save()
@@ -94,6 +94,8 @@ def cargaAssig(assig):
     q = assig.cuatri
     r = requests.get("https://guiadocent.etseib.upc.edu/simgen/form/simulator.php?lang=ca&degree=" +
                      str(deg.codigo) + "&semester=" + q.codigo + "&" + assig.codigo)
+    print("https://guiadocent.etseib.upc.edu/simgen/form/simulator.php?lang=ca&degree=" +
+          str(deg.codigo) + "&semester=" + q.codigo + "&" + assig.codigo)
     parsed = BeautifulSoup(r.text, "html.parser")
     grups = parsed.find_all(attrs={'type': 'checkbox'})
     subgrupos = False
@@ -101,6 +103,7 @@ def cargaAssig(assig):
     # Loop de grupos
     for child in grups:
         grupid = child["name"]
+        print("L:", grupid)
         if grupid != "autoRefresh":
             grupnum = int(grupid.split("_")[2])
             # Cargar horario del grupo
@@ -174,12 +177,21 @@ def getHorari(grau, quatri, grup):
     # Descargamos la tabla del horario
     r = requests.get("https://guiadocent.etseib.upc.edu/simgen/action/result.php?lang=ca&degree=" +
                      grau + "&semester=" + quatri + "&" + grup)
+    print("https://guiadocent.etseib.upc.edu/simgen/action/result.php?lang=ca&degree=" +
+          grau + "&semester=" + quatri + "&" + grup)
     parsed = BeautifulSoup(r.text, "html.parser")
     # Buscamos los bloques del color correcto
     moduls = parsed.find_all(attrs={"bgcolor": "#F6CECE", "valign": "top"})
     # print(moduls)
     horari = []
+
     for el in moduls:
+
+        if el.parent.name != "tr":
+            continue
+        if el.parent.parent.parent.parent.name != "tr":
+            print("err")
+            continue
         # El th que dice la hora
         h = el.parent.parent.parent.parent.find("th").string
         # Numero de casillas antes
