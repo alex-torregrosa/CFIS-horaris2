@@ -7,7 +7,7 @@
 aioredis==1.0.0           # via channels-redis
 asgiref==2.1.4            # via channels, channels-redis, daphne
 async-timeout==2.0.0      # via aioredis, asgiref
-attrs==17.4.0             # via automat, pytest
+attrs==17.4.0             # via automat, pytest, twisted
 autobahn==17.10.1         # via daphne
 automat==0.6.0            # via twisted
 beautifulsoup4==4.6.0
@@ -27,13 +27,14 @@ msgpack==0.5.4            # via channels-redis
 pluggy==0.6.0             # via pytest
 psycopg2==2.7.4
 py==1.5.2                 # via pytest
+pyhamcrest==1.9.0         # via twisted
 pytest-asyncio==0.8.0
 pytest-django==3.1.2
 pytest==3.4.0             # via pytest-asyncio, pytest-django
 pytz==2018.3              # via django
 requests==2.18.4
-six==1.11.0               # via autobahn, automat, pytest, txaio
-twisted==17.9.0           # via daphne
+six==1.11.0               # via autobahn, automat, pyhamcrest, pytest, txaio
+twisted==19.7.0           # via daphne
 txaio==2.8.2              # via autobahn
 urllib3==1.22             # via requests
 whitenoise==3.3.1
